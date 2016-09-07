@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.LoginActivity"
+    style="@style/linearLayoutDefaults"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <ImageView
+        android:layout_width="129dp"
+        android:layout_height="104dp"
+        android:id="@+id/idImgLogo"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:drawable/star_big_on" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/nome_app"
+        android:id="@+id/idTxtNomeApp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="25sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/texto_login"
+        android:id="@+id/idLabelLogin"
+        style="@style/labelCampos" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_EditText"
+        android:id="@+id/idEdtLogin"
+        style="@style/CamposDefaults" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/label_senha"
+        android:id="@+id/idLabelSenha"
+        style="@style/labelCampos" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_EditText"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/idEdtSenha"
+        style="@style/CamposDefaults" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/manter_logado"
+        android:id="@+id/idCheckManterLogado"
+        android:layout_gravity="center_horizontal"
+        android:checked="false"
+        android:buttonTint="#000000" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/botao_logar"
+        android:id="@+id/idBtnEntrar"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/botao_cadastrar"
+        android:id="@+id/idBtnCadastrar"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>

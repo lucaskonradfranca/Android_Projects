@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">FindMe-Unisociesc</string>
+    <string name="nome_app">FindMe - Unisociesc</string>
+    <string name="texto_login">Login</string>
+    <string name="label_senha">Senha</string>
+    <string name="manter_logado">Manter Conectado</string>
+    <string name="botao_logar">Entrar</string>
+    <string name="botao_cadastrar">Cadastrar</string>
+    <string name="erro_login_vazio">Preencha o Login.</string>
+    <string name="erro_senha_vazio">Preencha a Senha.</string>
+    <string name="title_activity_principal">PrincipalActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
