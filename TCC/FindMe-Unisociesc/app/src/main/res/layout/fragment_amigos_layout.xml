@@ -1,0 +1,26 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.PrincipalActivity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/atualizar"
+            android:id="@+id/idBotaoAtualizar"
+            android:layout_gravity="top|center_horizontal" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/idListaAmigos"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="top|bottom|center" />
+    </LinearLayout>
+</FrameLayout>

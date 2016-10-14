@@ -1,0 +1,159 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.PrincipalActivity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:focusable="false"
+            android:background="@drawable/layout_rounded">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/conta"
+                android:id="@+id/textView5"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/texto_login"
+                android:id="@+id/idTxtLogin"
+                android:layout_below="@id/textView5"
+                android:textColor="#000"
+                android:paddingLeft="5dp"
+                android:layout_alignParentStart="true" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/idEditLogin"
+                android:inputType="text"
+                android:maxLines="1"
+                android:enabled="false"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/idTxtLogin"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/label_senha"
+                android:id="@+id/idTxtSenha"
+                android:layout_below="@+id/idEditLogin"
+                android:textColor="#000"
+                android:layout_alignParentStart="true"
+                android:paddingLeft="5dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:ems="10"
+                android:id="@+id/idEditSenha"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/idTxtSenha"
+                android:layout_alignParentLeft="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/label_nome"
+                android:textColor="#000"
+                android:id="@+id/idTxtNome"
+                android:layout_below="@+id/idEditSenha"
+                android:paddingLeft="5dp"
+                android:layout_alignParentStart="true" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:maxLines="1"
+                android:id="@+id/idEditNome"
+                android:layout_below="@+id/idTxtNome"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/email"
+                android:id="@+id/idTxtEmail"
+                android:layout_below="@+id/idEditNome"
+                android:paddingLeft="5dp"
+                android:textColor="#000"
+                android:layout_alignParentStart="true" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:ems="10"
+                android:maxLines="1"
+                android:id="@+id/idEditEmail"
+                android:layout_below="@+id/idTxtEmail"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/data_nascimento"
+                android:textColor="#000"
+                android:id="@+id/idTxtNascimento"
+                android:layout_below="@+id/idEditEmail"
+                android:paddingLeft="5dp"
+                android:layout_alignParentStart="true" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:maxLines="1"
+                android:id="@+id/idEditDataNascimento"
+                android:layout_below="@+id/idTxtNascimento"
+                android:layout_alignParentStart="true" />
+
+        </RelativeLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/botao_confirmar"
+            android:id="@+id/idBtnConfirmar"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/idEditSenha"
+            android:layout_alignParentLeft="true"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/botao_cancelar"
+            android:id="@+id/idBtnCancelar"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/idBtnConfirmar"
+            android:layout_alignParentLeft="true" />
+
+    </LinearLayout>
+</ScrollView>

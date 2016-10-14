@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_menu_configuracoes"
+        android:title="@string/tabConfig"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_menu_config_user"
+        android:title="@string/ConfigUser"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_menu_sobre"
+        android:title="@string/sobre"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_menu_sair"
+        android:title="@string/sair"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+</menu>

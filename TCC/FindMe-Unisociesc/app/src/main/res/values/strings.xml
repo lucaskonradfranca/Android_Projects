@@ -1,17 +1,58 @@
 <resources>
-    <string name="app_name">FindMe-Unisociesc</string>
-    <string name="nome_app">FindMe - Unisociesc</string>
-    <string name="texto_login">Login</string>
+    <string name="app_name">FindMe</string>
+    <string name="nome_app">FindMe</string>
+    <string name="texto_login">Matrícula</string>
     <string name="label_senha">Senha</string>
     <string name="manter_logado">Manter Conectado</string>
     <string name="botao_logar">Entrar</string>
     <string name="botao_cadastrar">Cadastrar</string>
-    <string name="erro_login_vazio">Preencha o Login.</string>
+    <string name="botao_confirmar">Confirmar</string>
+    <string name="botao_cancelar">Cancelar</string>
+    <string name="erro_login_vazio">Preencha a Matrícula.</string>
+    <string name="erro_nome_vazio">Preencha o nome.</string>
+    <string name="erro_nascimento_vazio">Preencha a data de nascimento.</string>
+    <string name="erro_email_vazio">Preencha o E-mail.</string>
+    <string name="erro_email_invalido">E-mail informado não é valido.</string>
     <string name="erro_senha_vazio">Preencha a Senha.</string>
     <string name="title_activity_principal">PrincipalActivity</string>
+    <string name="carregando">Carregando</string>
+    <string name="carregando_login">Realizando login, aguarde...</string>
+    <string name="carregando_update">Atualizando dados, aguarde...</string>
+    <string name="erro">Erro</string>
+    <string name="erro_conexao">Ocorreu um erro ao realizar a conexão com o servidor.</string>
+    <string name="buscando_amigos">Buscando amigos</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="tabHome">Home</string>
+    <string name="tabAmigos">Amigos</string>
+    <string name="tabConfig">Configurações</string>
+    <string name="ConfigUser">Configurações do usuário</string>
+    <string name="minha_localizacao">Minha Localização:</string>
+    <string name="botao_localizar">Localizar um amigo</string>
+    <string name="botao_atualizar">Atualizar minha localização</string>
+    <string name="buscar_amigos">Procurar novos amigos</string>
+    <string name="atualizar">Atualizar</string>
+
+    <string name="evento_localizar">Localizar</string>
+    <string name="evento_excluir">Excluir</string>
+    <string name="evento_bloquear">Bloquear</string>
+    <string name="opcoes_amigos">Ações</string>
+    <string name="label_nome">Nome</string>
+    <string name="email">E-mail</string>
+    <string name="data_nascimento">Data de nascimento</string>
+    <string name="valida_senha">Obrigatório alterar a senha no primeiro acesso.</string>
+
+
+    <string name="sair">Sair</string>
+    <string name="confirma_sair">Deseja realmente sair da aplicação?</string>
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
+
+    <string name="conta">Conta</string>
+    <string name="privacidade">Privacidade</string>
+    <string name="sobre">Sobre</string>
 </resources>
