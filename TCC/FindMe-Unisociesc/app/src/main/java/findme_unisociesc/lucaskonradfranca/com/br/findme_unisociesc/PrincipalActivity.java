@@ -7,17 +7,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.widget.TabWidget;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.Model.Usuario;
-import findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.util.AppUtil;
 
 public class PrincipalActivity extends FragmentActivity {
     private FragmentTabHost mTabHost;

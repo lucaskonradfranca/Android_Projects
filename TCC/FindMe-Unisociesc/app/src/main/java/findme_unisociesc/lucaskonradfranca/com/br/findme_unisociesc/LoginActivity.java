@@ -166,6 +166,7 @@ public class LoginActivity extends Activity {
                         String email = "";
                         String data_nascimento = "";
                         String first_login = "";
+                        int nivel_privacidade = 0;
                         try{
                             status = response.getBoolean("status");
                             msg = response.getString("msg");
@@ -177,6 +178,7 @@ public class LoginActivity extends Activity {
                                 email           = a.getString("email").trim();
                                 data_nascimento = a.getString("data_nascimento").trim();
                                 first_login     = a.getString("first_login").trim();
+                                nivel_privacidade = a.getInt("nivel_privacidade");
                             }
 
                         }catch (Exception e){
@@ -213,7 +215,7 @@ public class LoginActivity extends Activity {
                                 usuario.setFirst_login("N");
                                 usuario.setNome(nome);
                                 usuario.setSenha(senha);
-
+                                usuario.setNivel_privacidade(nivel_privacidade);
                                 Gson gson = new Gson();
                                 String json = gson.toJson(usuario);
                                 SharedPreferences sharedPreferences = getSharedPreferences("LoginActivityPreferences", MODE_PRIVATE);
@@ -266,6 +268,7 @@ public class LoginActivity extends Activity {
         intent.putExtra("DATA_NASCIMENTO", data_nascimento);
         intent.putExtra("SENHA",data_nascimento);
         intent.putExtra("LOGIN","S");
+        intent.putExtra("NIVEL_PRIVACIDADE",0);
         startActivity(intent);
         finish();
     }

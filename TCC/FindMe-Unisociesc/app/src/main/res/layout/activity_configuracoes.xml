@@ -70,5 +70,25 @@
 
         </RelativeLayout>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/botao_confirmar"
+            android:id="@+id/idBtnConfirmarCfg"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/idEditSenha"
+            android:layout_alignParentLeft="true"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/botao_cancelar"
+            android:id="@+id/idBtnCancelarCfg"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/idBtnConfirmar"
+            android:layout_alignParentLeft="true" />
+
     </LinearLayout>
 </ScrollView>

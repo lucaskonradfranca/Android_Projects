@@ -158,6 +158,7 @@ public class FragmentAmigos extends Fragment{
                                 String email = "";
                                 String data_nascimento = "";
                                 String first_login = "";
+                                int nivel_privacidade;
 
                                 JSONObject objResponse = response.getJSONObject("objeto");
                                 JSONArray arrayResponse = objResponse.getJSONArray("entity");
@@ -171,9 +172,10 @@ public class FragmentAmigos extends Fragment{
                                     email           = o.getString("email").trim();
                                     data_nascimento = o.getString("data_nascimento").trim();
                                     first_login     = o.getString("first_login").trim();
+                                    nivel_privacidade = o.getInt("nivel_privacidade");
 
                                     amigos.add(nome.trim());
-                                    listaUsuarios.add(new Usuario(matricula, nome, email, "", data_nascimento, first_login));
+                                    listaUsuarios.add(new Usuario(matricula, nome, email, "", data_nascimento, first_login,nivel_privacidade));
                                 }
 
                                 ArrayAdapter<String> amigosAdapter = new ArrayAdapter<String>(view.getContext(),

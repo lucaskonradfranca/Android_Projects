@@ -53,6 +53,7 @@ public class ConfigUserActivity extends Activity {
     private String login;
     private String nome;
     private String email;
+    private int nivel_privacidade;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //String matricula = "";
@@ -78,7 +79,7 @@ public class ConfigUserActivity extends Activity {
         data_nascimento = getIntent().getStringExtra("DATA_NASCIMENTO");
         senha           = getIntent().getStringExtra("SENHA");
         login           = getIntent().getStringExtra("LOGIN");
-
+        nivel_privacidade = getIntent().getIntExtra("NIVEL_PRIVACIDADE",0);
         if ( login.equals("S")){
             try{
                 getActionBar().setDisplayHomeAsUpEnabled(false);
@@ -226,7 +227,8 @@ public class ConfigUserActivity extends Activity {
                                                                   "&nome="+URLEncoder.encode(edtNome.getText().toString(),"UTF-8")+
                                                                   "&email="+URLEncoder.encode(edtEmail.getText().toString(),"UTF-8")+
                                                                   "&data_nascimento="+URLEncoder.encode(edtDataNascimento.getText().toString(),"UTF-8")+
-                                                                  "&first_login=N";
+                                                                  "&first_login=N"+
+                                                                  "&nivel_privacidade="+nivel_privacidade;
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
@@ -262,6 +264,7 @@ public class ConfigUserActivity extends Activity {
                                             usuario.setFirst_login("N");
                                             usuario.setNome(edtNome.getText().toString());
                                             usuario.setSenha(edtSenha.getText().toString());
+                                            usuario.setNivel_privacidade(nivel_privacidade);
 
                                             Intent intent = new Intent(ConfigUserActivity.this, PrincipalActivity.class);
                                             intent.putExtra("usuario",usuario);

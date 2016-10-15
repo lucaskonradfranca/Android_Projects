@@ -4,13 +4,20 @@ import java.io.Serializable;
 
 public class Usuario implements Serializable{
     public Usuario() { }
-    public Usuario(String matricula, String nome, String email, String senha, String data_nascimento, String first_login) {
+    public Usuario(String matricula,
+                   String nome,
+                   String email,
+                   String senha,
+                   String data_nascimento,
+                   String first_login,
+                   int nivel_privacidade) {
         this.matricula = matricula;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.data_nascimento = data_nascimento;
         this.first_login = first_login;
+        this.nivel_privacidade = nivel_privacidade;
     }
 
     //Dados do usuário
@@ -20,6 +27,7 @@ public class Usuario implements Serializable{
     private String senha = "";
     private String data_nascimento = "";
     private String first_login = "";
+    private int nivel_privacidade;
 
     private String msg_erro = "";
 
@@ -53,9 +61,7 @@ public class Usuario implements Serializable{
     public String getData_nascimento() {
         return data_nascimento;
     }
-    public void setData_nascimento(String data_nascimento) {
-        this.data_nascimento = data_nascimento;
-    }
+    public void setData_nascimento(String data_nascimento) { this.data_nascimento = data_nascimento; }
     public String getFirst_login() {
         return first_login;
     }
@@ -67,5 +73,11 @@ public class Usuario implements Serializable{
     }
     public void setMsg_erro(String msg_erro) {
         this.msg_erro = msg_erro;
+    }
+    public int getNivel_privacidade() {
+        return nivel_privacidade;
+    }
+    public void setNivel_privacidade(int nivel_privacidade) {
+        this.nivel_privacidade = nivel_privacidade;
     }
 }

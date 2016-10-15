@@ -12,7 +12,8 @@ import android.widget.ProgressBar;
  */
 public class AppUtil {
 
-    private static String SERVER = "http://192.168.137.1:8080/FindMe-Server/";
+    //private static String SERVER = "http://192.168.137.1:8080/FindMe-Server/";
+    private static String SERVER = "http://192.168.1.4:8080/FindMe-Server/";
     public static String getServer() {
         return SERVER;
     }
