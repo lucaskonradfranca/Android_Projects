@@ -17,13 +17,18 @@
       <param-value>resources</param-value> 
     </init-param> 
     <init-param>
-	       <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
-	       <param-value>true</param-value>
-        </init-param>
+       <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+       <param-value>true</param-value>
+    </init-param>
     <load-on-startup>1</load-on-startup> 
   </servlet> 
   <servlet-mapping> 
     <servlet-name>Jersey REST Service</servlet-name> 
     <url-pattern>/*</url-pattern> 
-  </servlet-mapping> 
+  </servlet-mapping>
+  <listener>
+    <listener-class>
+      main.MainServletContextListener
+    </listener-class>
+  </listener> 
 </web-app>

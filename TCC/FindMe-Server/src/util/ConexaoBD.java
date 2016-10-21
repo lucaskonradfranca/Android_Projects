@@ -1,6 +1,5 @@
 package util;
 
-//Classes mecessarias para uso do Banco de dados
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;

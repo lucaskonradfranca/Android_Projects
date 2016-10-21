@@ -1,0 +1,139 @@
+package com.daniel.convert;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public class ConvertToArff {
+
+	/**
+	 * @param args
+	 * @throws IOException
+	 */
+
+	double powerSum1 = 0;
+	double powerSum2 = 0;
+	double stdev = 0;
+
+	static String[] parts;
+
+	// basic service set identifier - nome do AP
+	static List<String> bssid = new ArrayList<String>();
+	// service set identifier - mac do AP
+	static List<String> ssid = new ArrayList<String>();
+	// received signal strength indicator - potencia do sinal (-87 a -32)
+	static List<String> rssi = new ArrayList<String>();
+	// lista de rssi que será normalizado
+	static List<String> tempRssi = new ArrayList<String>();
+	// nome da sala
+	static List<String> sala = new ArrayList<String>();
+	// numero da contagem, identificador único por contagem (UUID)
+	static List<String> contagem = new ArrayList<String>();
+	// nome das salas identifacadas, sem repetir
+	static List<String> nomeSalas = new ArrayList<String>();
+	// nome dos APs identifacados, sem repetir
+	static List<String> nomeAp = new ArrayList<String>();
+	// chave primária,
+	static List<String> key = new ArrayList<String>();
+
+	public static void main(String arg[]) {
+		File path = new File("C:\\Users\\daniel.arthur\\Desktop\\WifiSignal\\");
+		try {
+			listFilesForFolder(path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// System.out.println(rssi);
+	}
+
+	/**
+	 * Cria arrays com mac da rede, sinal, sala, e identificador único da
+	 * contagem
+	 * 
+	 * @param file
+	 *            um arquivo com as informações do sinal
+	 */
+	public static void loadData(File file) throws IOException {
+		String line;
+		String uuid = UUID.randomUUID().toString();
+
+		BufferedReader br = new BufferedReader(new FileReader(file));
+
+		tempRssi.clear();
+
+		while ((line = br.readLine()) != null) {
+			// process the line.
+			System.out.println(line);
+			parts = line.split("\\x7C"); // \\x7C = | em ASCII
+
+			bssid.add(parts[0]);
+			ssid.add(parts[1]);
+			tempRssi.add(parts[2]);
+			sala.add(parts[3]);
+			contagem.add(uuid);
+			// key.add(parts[1] + parts[2] + parts[3] + uuid);
+
+			if (!nomeSalas.contains(parts[3])) {
+				nomeSalas.add(parts[3]);
+			}
+			if (!nomeAp.contains(parts[1])) {
+				nomeAp.add(parts[1]);
+			}
+		}
+
+		rssi.addAll(normalize(tempRssi));
+
+		br.close();
+	}
+
+	/**
+	 * Geral: Mostra os arquivos da pasta informada
+	 * 
+	 * @param folder
+	 *            pasta onde estão os arquivos
+	 */
+	public static void listFilesForFolder(final File folder) throws IOException {
+		for (final File fileEntry : folder.listFiles()) {
+			if (fileEntry.isDirectory()) {
+				listFilesForFolder(fileEntry);
+			} else {
+				loadData(fileEntry);
+			}
+		}
+	}
+
+	public static List<String> normalize(List<String> lista) throws IOException {
+
+		/* x = (x - y) / a 
+		 * x = intensidade do sinal, y(mi) = média dos sinais, a = desvio padrão */
+		
+		List<String> listaRetorno = new ArrayList<String>();
+
+		double average = 0, finalsum = 0;
+
+		for (int i = 0; i < lista.size(); i++) {
+			finalsum += Double.parseDouble(lista.get(i));
+		}
+
+		average = finalsum / (lista.size());
+
+		double std = StandardDeviationCalc.stdDev(lista);
+		
+		System.out.println(std);
+
+		for (int i = 0; i < lista.size(); i++) {
+			listaRetorno
+					.add(String.valueOf(((Double.parseDouble(lista.get(i)) - average) / std)));
+		}
+		// System.out.println(listaRetorno);
+
+		return listaRetorno;
+	}
+
+}

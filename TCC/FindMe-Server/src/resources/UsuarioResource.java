@@ -2,15 +2,22 @@ package resources;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET; 
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import models.APResource;
+import models.AccessPoint;
+import models.PredictionRequest;
+import models.Room;
 import models.Usuario;
+import services.PredictionService;
 import util.RetornoRest;  
 
 @Path("/usuario") 
@@ -104,5 +111,40 @@ public class UsuarioResource {
 		}
 		return ret;
 	} 
+	
+	
+	/*
+	 * Busca a própria localização.
+	 * 
+	 * Parâmetro POST: 
+	 [
+       {"bssid": "1", "ssid": "lalala", "rssi":"-20"},
+       {"bssid": "2", "ssid": "lalala2", "rssi":"-50"}
+     ]
+     
+     URL POST: http://localhost:8080/FindMe-Server/usuario/getMyLocation
+
+	 * 
+	 * */
+	
+	@POST
+	@Path("/getMyLocation")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public RetornoRest getMyLocation(List<APResource> apList){
+		RetornoRest ret = new RetornoRest();
+		PredictionRequest request = new PredictionRequest();
+		for (int i=0; i < apList.size(); i++){
+			System.out.println(apList.get(i).getBSSID());
+			request.addAccessPoint(apList.get(i).getBSSID(), apList.get(i).getRSSI());
+		}
+		PredictionService predServ = PredictionService.getInstance();
+		Room room = predServ.predict(request);
+		
+		ret.setMsg(room.getName());
+		ret.setStatus(true);
+		ret.setObjeto(room);
+		return ret;
+	}
 	
 }
