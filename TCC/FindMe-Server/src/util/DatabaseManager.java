@@ -33,9 +33,10 @@ public class DatabaseManager {
             
             for(Class cls : models){
             	if(!DaoManager.createDao(connectionSource, cls).isTableExists()){
-            		System.out.println("ENTROU AQUIIIIII");
             		TableUtils.createTable(connectionSource, cls);
                     TableUtils.clearTable(connectionSource, cls);
+                }else{
+                	TableUtils.clearTable(connectionSource, cls);
                 }
             }
             

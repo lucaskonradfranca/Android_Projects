@@ -1,19 +1,26 @@
 package resources;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSerializer;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import models.APResource;
-import models.AccessPoint;
 import models.PredictionRequest;
 import models.Room;
 import models.Usuario;
@@ -126,24 +133,34 @@ public class UsuarioResource {
 
 	 * 
 	 * */
-	
+	/*
 	@POST
 	@Path("/getMyLocation")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public RetornoRest getMyLocation(List<APResource> apList){
+	public RetornoRest getMyLocation(List<APResource> apList){*/
+	@GET
+	@Path("/getMyLocation")
+	@Produces(MediaType.APPLICATION_JSON)
+	public RetornoRest getMyLocation(@QueryParam("apList") String jsonApList /*List<APResource> apList*/){
+
+		JsonParser parser = new JsonParser();
+		JsonElement element = parser.parse(jsonApList);
+		JsonArray apListJson = element.getAsJsonArray();
+		
 		RetornoRest ret = new RetornoRest();
 		PredictionRequest request = new PredictionRequest();
-		for (int i=0; i < apList.size(); i++){
-			System.out.println(apList.get(i).getBSSID());
-			request.addAccessPoint(apList.get(i).getBSSID(), apList.get(i).getRSSI());
+		for(Object js : apListJson){
+			Gson gson = new Gson();
+			APResource ap = gson.fromJson(js.toString(), APResource.class);
+			request.addAccessPoint(ap.getBSSID(), ap.getRSSI());
 		}
 		PredictionService predServ = PredictionService.getInstance();
 		Room room = predServ.predict(request);
 		
 		ret.setMsg(room.getName());
 		ret.setStatus(true);
-		ret.setObjeto(room);
+		//ret.setObjeto(room);
 		return ret;
 	}
 	
