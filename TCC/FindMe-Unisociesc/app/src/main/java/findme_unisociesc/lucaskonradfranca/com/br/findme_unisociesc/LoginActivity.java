@@ -1,10 +1,18 @@
 package findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc;
 
+import android.*;
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,6 +29,8 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -31,6 +41,14 @@ import findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.Model.Usuari
 import findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.util.AppUtil;
 
 public class LoginActivity extends Activity {
+
+    private final int INTERNET=1;
+    private final int ACCESS_WIFI_STATE=2;
+    private final int CHANGE_WIFI_STATE=3;
+    private final int CHANGE_WIFI_MULTICAST_STATE=4;
+    private final int WRITE_EXTERNAL_STORAGE=5;
+    private final int ACCESS_FINE_LOCATION=6;
+    private final int ACCESS_COARSE_LOCATION=7;
 
     private EditText txtLogin;
     private EditText txtSenha;
@@ -45,6 +63,17 @@ public class LoginActivity extends Activity {
 
         String matricula = getIntent().getStringExtra("matricula");
         String senha     = getIntent().getStringExtra("senha");
+
+        verificaPermissoes();
+
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int status = googleApiAvailability.isGooglePlayServicesAvailable(getBaseContext());
+
+        if (status != ConnectionResult.SUCCESS){
+            if(googleApiAvailability.isUserResolvableError(status)) {
+                googleApiAvailability.getErrorDialog(LoginActivity.this, status, 2404).show();
+            }
+        }
 
         //Carrega os componentes nas variáveis.
         carregarComponentesPrivate();
@@ -75,7 +104,60 @@ public class LoginActivity extends Activity {
             usuario.setNome(nome);
             usuario.setSenha(senha);
 
+            atualizarToken();
+
             ChamarActivityPrincipal(usuario);
+        }
+
+    }
+
+    private void requestPermission(String permissionName, int permissionRequestCode) {
+        ActivityCompat.requestPermissions(this,
+                new String[]{permissionName}, permissionRequestCode);
+    }
+
+    private void verificaPermissoes() {
+
+        int permissionCheck = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.INTERNET);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.INTERNET, INTERNET);
+        }
+
+        permissionCheck = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_WIFI_STATE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.ACCESS_WIFI_STATE, ACCESS_WIFI_STATE);
+        }
+
+        permissionCheck = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.CHANGE_WIFI_STATE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.CHANGE_WIFI_STATE, CHANGE_WIFI_STATE);
+        }
+
+        permissionCheck = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.CHANGE_WIFI_MULTICAST_STATE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.CHANGE_WIFI_MULTICAST_STATE, CHANGE_WIFI_MULTICAST_STATE);
+        }
+
+        permissionCheck = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE);
+        }
+
+        permissionCheck = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, ACCESS_FINE_LOCATION);
+        }
+
+        permissionCheck = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION, ACCESS_COARSE_LOCATION);
         }
 
     }
@@ -85,7 +167,7 @@ public class LoginActivity extends Activity {
         txtSenha          = (EditText) findViewById(R.id.idEdtSenha);
         botaoEntrar       = (Button) findViewById(R.id.idBtnEntrar);
         //botaoCadastrar    = (Button) findViewById(R.id.idBtnCadastrar);
-        checkManterLogado = (CheckBox) findViewById(R.id.idCheckManterLogado);
+        //checkManterLogado = (CheckBox) findViewById(R.id.idCheckManterLogado);
         imgHelp           = (ImageView) findViewById(R.id.idHelpLogin);
     }
 
@@ -121,7 +203,7 @@ public class LoginActivity extends Activity {
         //realizar o login
         String login = txtLogin.getText().toString();
         final String senha = txtSenha.getText().toString();
-        boolean manterLogado = checkManterLogado.isChecked();
+        final boolean manterLogado = true; //checkManterLogado.isChecked();
 
         if(login == null || login.isEmpty()){
             txtLogin.setError(getString(R.string.erro_login_vazio));
@@ -191,7 +273,7 @@ public class LoginActivity extends Activity {
 
                         if (status){
                             //Salva preferência de manter logado
-                            if(checkManterLogado.isChecked()){
+                            if(manterLogado){
                                 SharedPreferences sharedPreferences = getSharedPreferences("LoginActivityPreferences", MODE_PRIVATE);
                                 SharedPreferences.Editor editor     = sharedPreferences.edit();
 
@@ -201,6 +283,8 @@ public class LoginActivity extends Activity {
                                 editor.putString("email",email);
                                 editor.putString("data_nascimento",data_nascimento);
                                 editor.commit();
+
+                                atualizarToken();
                             }
 
                             if(first_login.equals("S")){
@@ -273,4 +357,49 @@ public class LoginActivity extends Activity {
         finish();
     }
 
+    private void atualizarToken()
+    {
+        SharedPreferences preferences = getSharedPreferences("LoginActivityPreferences", MODE_PRIVATE);
+        String matricula = preferences.getString("matricula","");
+        preferences = getSharedPreferences("TokenPreferences", MODE_PRIVATE);
+        String token = preferences.getString("token","");
+
+        RequestQueue mRequestQueue;
+
+        // Set up the network to use HttpURLConnection as the HTTP client.
+        Network network = new BasicNetwork(new HurlStack());
+
+        // Instantiate the cache
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+
+        // Instantiate the RequestQueue with the cache and network.
+        mRequestQueue = new RequestQueue(cache, network);
+
+        String url = null;
+
+        try{
+            url = AppUtil.getServer() + "usuario/updateToken?matricula="+ URLEncoder.encode(matricula,"UTF-8")+"&token="+URLEncoder.encode(token,"UTF-8");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // Start the queue
+        mRequestQueue.start();
+        JsonObjectRequest request = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("TOKEN","response - OK");
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        error.printStackTrace();
+                    }
+                });
+
+        mRequestQueue.add(request);
+    }
 }

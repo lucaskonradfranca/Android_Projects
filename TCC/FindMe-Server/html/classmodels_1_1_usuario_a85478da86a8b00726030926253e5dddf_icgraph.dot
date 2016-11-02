@@ -1,0 +1,15 @@
+digraph "models.Usuario.Usuario"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="models.Usuario.Usuario",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="models.Usuario.getAmigos",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmodels_1_1_usuario.html#a157e6e04de3d59ee691af208d1b3d6ac"];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="resources.UsuarioResource.\lGetAll",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classresources_1_1_usuario_resource.html#a921e30b0f3a658c9d32168afcb6cbf76"];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="models.Usuario.getUsuario",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmodels_1_1_usuario.html#af8ed431222cc4e7e8fa27f64a8fa523f"];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="resources.UsuarioResource.\lUpdateUser",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classresources_1_1_usuario_resource.html#ac69671fef719260645b8b70a656f5ebf"];
+}

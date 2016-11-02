@@ -6,6 +6,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONObject;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+
+import services.PredictionService;
 import util.ConexaoBD;
 
 public class Usuario {
@@ -204,7 +215,8 @@ public class Usuario {
 			setMsg_erro(ConexaoBD.msgErro);
 			usuarios = null;
 		}else{
-			ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM usuario WHERE matricula <> '"+matricula+"' ORDER BY nome; ");
+			//ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM usuario WHERE matricula <> '"+matricula+"' ORDER BY nome; ");
+			ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM usuario ORDER BY nome; ");
 			try{
 				boolean achou = false;
 				while (rs.next()){
@@ -256,6 +268,163 @@ public class Usuario {
 		
 		
 		return user;
+	}
+	
+	public boolean updateAps(JsonArray apList){
+		boolean status = true;
+		
+		if (this.matricula.isEmpty()){
+			status = false;
+		}else{
+			Connection con = ConexaoBD.getConexaoSQL();
+			String query = "";
+			int result = 0;
+			
+			query = "DELETE FROM usuario_aps WHERE matricula = '" + this.matricula + "'; ";
+			result = ConexaoBD.execute(con,query);
+			if (result < 0){
+				status = false;
+			}else{
+				query = " INSERT INTO usuario_aps (matricula, bssid, ssid, rssi, sequencia) VALUES ";
+				boolean virgula = false;
+				int sequencia = 0;
+				for(Object js : apList){
+					Gson gson = new Gson();
+					APResource ap = gson.fromJson(js.toString(), APResource.class);
+					if (virgula){
+						query += ",";
+					}
+					query += " ('" + this.matricula + "', "
+							+ "'" + ap.getBSSID() + "', "
+							+ "'" + ap.getSSID() + "', "
+							      + ap.getRSSI() + ", "
+							      + sequencia + " ) ";
+					virgula = true;
+					sequencia++;
+				}
+				result = ConexaoBD.execute(con,query);
+				if (result < 0){
+					status = false;
+				}
+			}
+		}
+		
+		return status;
+	}
+	
+	public boolean updateToken(String token){
+		boolean retorno = true;
+		String query = "";
+		if (this.matricula.isEmpty() || token.isEmpty()){
+			retorno = false;
+		}else{
+			Connection con = ConexaoBD.getConexaoSQL();
+			ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM usuario_token WHERE matricula = '"+this.matricula+"'; ");
+			try{
+				if (rs.first()){
+					query = "UPDATE usuario_token SET token = '" + token + "' WHERE matricula = '" + this.matricula + "'; ";
+				}else{
+					query = "INSERT INTO usuario_token (matricula, token) VALUES ('" + this.matricula + "', '" + token + "'); ";
+				}
+				int result = ConexaoBD.execute(con,query);
+				if (result < 0){
+					retorno = false;
+				}else{
+					retorno = true;
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return retorno;
+	}
+	
+	public boolean locate(){
+		boolean status = false;
+		
+		//primeiro verifica se o usuário tem o token do dispositivo cadastrado.
+		Connection con = ConexaoBD.getConexaoSQL();
+		ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM usuario_token WHERE matricula = '"+this.matricula+"'; ");
+		String token = "";
+		String query = "";
+		int result = 0;
+		try{
+			if (rs.first()){
+				token = rs.getString("token").trim();
+				if(token.isEmpty()){
+					this.msg_erro = "Usuário ainda não está disponível para localizar.";
+					return false;
+				}else{
+					//Exclui as informações dos APS disponíveis desse usuário, e tenta recuperar as informações atualizadas.
+					query = "DELETE FROM usuario_aps WHERE matricula = '" + this.matricula + "'; ";
+					result = ConexaoBD.execute(con,query);
+					if (result < 0){
+						this.msg_erro = "Ocorreram erros ao atualizar as informações do usuário.";
+						return false;
+					}
+					HttpClient client = HttpClientBuilder.create().build();
+					HttpPost post = new HttpPost("https://fcm.googleapis.com/fcm/send");
+					post.setHeader("Content-type", "application/json");
+					post.setHeader("Authorization", "key=AIzaSyAet7Tpz_VnaLm5OLM9CKlGe-X8GDiwMCE");
+					
+					JSONObject message = new JSONObject();
+					message.put("to", token);
+					message.put("priority", "high");
+					
+					JSONObject data = new JSONObject();
+					data.put("request", "update_aps");
+					
+					message.put("data", data);
+					
+					post.setEntity(new StringEntity(message.toString(), "UTF-8"));
+					
+					HttpResponse response = client.execute(post);
+					
+					if (response.getStatusLine().getStatusCode() != 200){
+						this.msg_erro = "Não foi possível encontrar o usuário. (Falha de conexão com o aparelho)";
+						return false;
+					}
+					boolean continua = true;
+					ResultSet rsAps = null;
+					int tentativa = 0;
+					while(continua){
+						if (tentativa >= 5){
+							continua = false;
+						}
+						rsAps = ConexaoBD.consultar(con, "SELECT * FROM usuario_aps WHERE matricula = '"+this.matricula+"' ORDER BY sequencia; ");
+						 if (rsAps.first()){
+							 continua = false;
+						 }else{
+							 Thread.sleep(500);
+							 tentativa++;
+						 }
+					}
+					
+					if (rsAps.first()){
+						PredictionRequest request = new PredictionRequest();
+						request.addAccessPoint(rsAps.getString("BSSID"), rsAps.getFloat("RSSI"));
+						while(rsAps.next()){
+							request.addAccessPoint(rsAps.getString("BSSID"), rsAps.getFloat("RSSI"));
+						}
+						
+						PredictionService predServ = PredictionService.getInstance();
+						Room room = predServ.predict(request);
+						this.msg_erro = room.getName().trim();
+						status = true;
+					}else{
+						this.msg_erro = "Não foi possível encontrar o usuário. (Falha na obtenção de suas informações)";
+						return false;
+					}					
+				}
+			}else{
+				this.msg_erro = "Usuário ainda não está disponível para localizar.";
+				return false;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			this.msg_erro = "Ocorreram erros no programa. " + e.getMessage();
+		}
+		return status;
 	}
 	
 	//-----------------------------------

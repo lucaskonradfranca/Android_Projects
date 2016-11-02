@@ -85,29 +85,29 @@ public class FragmentHome extends Fragment {
 
         mainWifi = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
 
-        receiverWifi = new WifiReceiver();
-        getContext().registerReceiver(receiverWifi, new IntentFilter(
-                WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        //receiverWifi = new WifiReceiver();
+        //getContext().registerReceiver(receiverWifi, new IntentFilter(
+                //WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         if(mainWifi.isWifiEnabled()==false)
         {
             mainWifi.setWifiEnabled(true);
         }
 
-        doInback();
+        //doInback();
     }
 
     @Override
     public void onPause()
     {
-        getContext().unregisterReceiver(receiverWifi);
+        //getContext().unregisterReceiver(receiverWifi);
         super.onPause();
     }
 
     @Override
     public void onResume()
     {
-        getContext().registerReceiver(receiverWifi, new IntentFilter(
-                WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        //getContext().registerReceiver(receiverWifi, new IntentFilter(
+                //WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         super.onResume();
     }
 
@@ -117,7 +117,7 @@ public class FragmentHome extends Fragment {
         View v = inflater.inflate(R.layout.fragment_home_layout, container, false);
         return v;
     }
-
+/*
     public void doInback()
     {
         handler.postDelayed(new Runnable() {
@@ -136,11 +136,37 @@ public class FragmentHome extends Fragment {
         }, 1000);
 
     }
-
+*/
     public void getMyLocation(View v){
         final View myView = v;
         final JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
+
+        mainWifi = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+
+        //receiverWifi = new WifiReceiver();
+        //getContext().registerReceiver(receiverWifi, new IntentFilter(
+//                WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        if(mainWifi.isWifiEnabled()==false)
+        {
+            mainWifi.setWifiEnabled(true);
+        }
+        mainWifi.startScan();
+        mainWifi.getScanResults();
+
+        wifis.clear();
+
+        List<ScanResult> wifiList;
+        wifiList = mainWifi.getScanResults();
+        for(int i = 0; i < wifiList.size(); i++)
+        {
+            ScanResult wifi =  wifiList.get(i);
+            WifiInfo info = new WifiInfo();
+            info.setBSSID(wifi.BSSID);
+            info.setRSSI(wifi.level);
+            info.setSSID(wifi.SSID);
+            wifis.add(info);
+        }
 
         try{
             //for (int i = 0; i < wifis.size(); i++){
@@ -156,6 +182,8 @@ public class FragmentHome extends Fragment {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        //AppUtil.exibeMensagem((Activity) v.getContext(),"teste",jsonArray.toString(),R.drawable.ic_alert);
 
         final ProgressDialog progress = AppUtil.getProgress((Activity) v.getContext(),getString(R.string.carregando),"Buscando localização, aguarde...");
         progress.show();
@@ -214,7 +242,7 @@ public class FragmentHome extends Fragment {
 
         mRequestQueue.add(request);
 
-
+        //getContext().unregisterReceiver(receiverWifi);
     }
 
     class WifiReceiver extends BroadcastReceiver

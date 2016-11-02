@@ -5,10 +5,12 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +68,7 @@ public class FragmentAmigos extends Fragment{
 
         listaAmigos.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
-            public void onItemClick(AdapterView<?> parent, View viewItm, int position, long id){
+            public void onItemClick(AdapterView<?> parent, final View viewItm, final int position, long id){
                 final String amigo = listaAmigos.getItemAtPosition(position).toString();
                 final CharSequence[] items = {
                         getString(R.string.evento_localizar),
@@ -81,7 +83,7 @@ public class FragmentAmigos extends Fragment{
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (i){
                             case 0:
-                                Toast.makeText(getContext(), "Localizar amigo" + amigo, Toast.LENGTH_SHORT).show();
+                                localizar(position, viewItm);
                                 break;
                             case 1:
                                 Toast.makeText(getContext(), "Bloquear amigo" + amigo, Toast.LENGTH_SHORT).show();
@@ -105,6 +107,70 @@ public class FragmentAmigos extends Fragment{
             }
         });
 
+    }
+
+    private void localizar(final int position, final View v){
+        final ProgressDialog progress = AppUtil.getProgress((Activity) v.getContext(),getString(R.string.carregando),"Buscando localização, aguarde...");
+        progress.show();
+
+        RequestQueue mRequestQueue;
+
+        // Set up the network to use HttpURLConnection as the HTTP client.
+        Network network = new BasicNetwork(new HurlStack());
+
+        // Instantiate the cache
+        Cache cache = new DiskBasedCache(v.getContext().getCacheDir(), 1024 * 1024); // 1MB cap
+
+        // Instantiate the RequestQueue with the cache and network.
+        mRequestQueue = new RequestQueue(cache, network);
+
+        String url = null;
+
+        try{
+            url = AppUtil.getServer() + "usuario/getLocation?matricula="+ URLEncoder.encode(listaUsuarios.get(position).getMatricula(),"UTF-8");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // Start the queue
+        mRequestQueue.start();
+        JsonObjectRequest request = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        progress.dismiss();
+                        boolean status = false;
+                        String msg;
+
+                        try{
+                            status = response.getBoolean("status");
+                            msg = response.getString("msg");
+
+                            if (status){
+                                Intent intent = new Intent(getActivity(),LocationActivity.class);
+                                intent.putExtra("localizacao",msg);
+                                intent.putExtra("usuario",listaUsuarios.get(position).getNome());
+                                startActivity(intent);
+                            }else{
+                                AppUtil.exibeMensagem((Activity) v.getContext(),"Localização",msg,R.drawable.ic_alert);
+                            }
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        error.printStackTrace();
+                        progress.dismiss();
+                        AppUtil.exibeMensagem((Activity) v.getContext(),getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
+                    }
+                });
+
+        mRequestQueue.add(request);
     }
 
     private void carregarAmigos(final View view){

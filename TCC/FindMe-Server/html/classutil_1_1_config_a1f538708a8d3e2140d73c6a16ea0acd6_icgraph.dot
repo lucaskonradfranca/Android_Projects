@@ -1,0 +1,18 @@
+digraph "util.Config.getDatabaseUrl"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="util.Config.getDatabaseUrl",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="services.AbstractService.\lAbstractService",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classservices_1_1_abstract_service.html#ac8cb890fb55df24ab644b365b40f7d41"];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="util.DatabaseManager.create\lDatabase",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1_database_manager.html#a7f0d2251b07860c6120289ea7fff8600"];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="main.MainServletContextListener.context\lInitialized",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmain_1_1_main_servlet_context_listener.html#a00311344addf99b3723a1c85a738447e"];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="util.DatabaseManager.seed\lLocations",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1_database_manager.html#a0ea9df6100ce303375a61c1d6e1aa53d"];
+  Node5 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="util.DatabaseManager.seed\lDatabase",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1_database_manager.html#a4550b4cece05a537b62f13f2ec2e7b59"];
+}

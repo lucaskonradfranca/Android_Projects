@@ -1,0 +1,13 @@
+digraph "util.RetornoRest.setObjeto"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node13 [label="util.RetornoRest.setObjeto",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node13 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="resources.LoginResource.realizar\lLogin",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classresources_1_1_login_resource.html#a2983ce3e2d7be8670effd487aaeb8907"];
+  Node13 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="resources.UsuarioResource.\lGetAll",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classresources_1_1_usuario_resource.html#a921e30b0f3a658c9d32168afcb6cbf76"];
+  Node13 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="resources.UsuarioResource.\lUpdateUser",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classresources_1_1_usuario_resource.html#ac69671fef719260645b8b70a656f5ebf"];
+}

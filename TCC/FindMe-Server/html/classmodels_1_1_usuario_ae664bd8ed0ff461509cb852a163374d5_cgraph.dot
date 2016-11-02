@@ -1,0 +1,13 @@
+digraph "models.Usuario.logar"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node52 [label="models.Usuario.logar",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node52 -> Node53 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node53 [label="util.ConexaoBD.getConexaoSQL",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1_conexao_b_d.html#a165d364f218f96af463950759d00f15c"];
+  Node52 -> Node54 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node54 [label="models.Usuario.setMsg_erro",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmodels_1_1_usuario.html#a7014b0fbb3d31e3f2705ea93b0f5d8f2"];
+  Node52 -> Node55 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node55 [label="util.ConexaoBD.consultar",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1_conexao_b_d.html#a845e0da23c66e8fb598ece10a2a028d6"];
+}

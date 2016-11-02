@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "298846430259",
+    "firebase_url": "https://mytcc-25386.firebaseio.com",
+    "project_id": "mytcc-25386",
+    "storage_bucket": "mytcc-25386.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298846430259:android:583307ee3c5ace93",
+        "android_client_info": {
+          "package_name": "findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298846430259-kl73ch44mcvroelj6bvpafdtlpmnfjge.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGbQXVTgCllckE5RtcrKvfDNc4zJKAG7g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

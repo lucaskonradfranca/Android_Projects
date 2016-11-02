@@ -10,6 +10,7 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -27,4 +28,9 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.0'
     compile 'com.google.code.gson:gson:2.7'
     compile project(path: ':volley')
+    compile 'com.google.firebase:firebase-database:9.4.0'
+    compile 'com.google.firebase:firebase-auth:9.4.0'
+    compile 'com.google.firebase:firebase-messaging:9.4.0'
+    compile 'com.google.android.gms:play-services:9.4.0'
 }
+apply plugin: 'com.google.gms.google-services'

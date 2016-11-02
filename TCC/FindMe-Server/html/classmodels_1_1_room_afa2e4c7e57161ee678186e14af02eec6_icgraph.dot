@@ -1,0 +1,12 @@
+digraph "models.Room.getName"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node11 [label="models.Room.getName",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node11 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="resources.UsuarioResource.get\lMyLocation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classresources_1_1_usuario_resource.html#abb4d2cd5e8c87d1bfe9216a8836be338"];
+  Node11 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="services.PredictionService.predict",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classservices_1_1_prediction_service.html#a831f8f8591c7c57ff3a2ad10e623449b"];
+  Node13 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

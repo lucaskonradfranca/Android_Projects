@@ -1,0 +1,14 @@
+digraph "models.AccessPoint.getId"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node6 [label="models.AccessPoint.getId",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="services.PredictionService.generate\lTrainData",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classservices_1_1_prediction_service.html#aabbb939a70086467d1874d917238dc88"];
+  Node7 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="main.MainServletContextListener.context\lInitialized",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmain_1_1_main_servlet_context_listener.html#a00311344addf99b3723a1c85a738447e"];
+  Node7 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="services.PredictionService.train",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classservices_1_1_prediction_service.html#a169d1fc31786286a2d922036a799b072"];
+  Node9 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

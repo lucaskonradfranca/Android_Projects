@@ -119,6 +119,63 @@ public class UsuarioResource {
 		return ret;
 	} 
 	
+	/*
+	 * Atualiza no servidor os AP's disponíveis para o usuário.
+	 * 
+	 * Parâmetro GET: 
+	 ApList - (json em formato string)
+	 [
+       {"bssid": "1", "ssid": "lalala", "rssi":"-20"},
+       {"bssid": "2", "ssid": "lalala2", "rssi":"-50"}
+     ] 
+     Matrícula - 11111111
+     
+     URL POST: http://localhost:8080/FindMe-Server/usuario/myAccessPoints
+
+	 * 
+	 * */
+	
+	@GET
+	@Path("/myAccessPoints")
+	@Produces(MediaType.APPLICATION_JSON)
+	public RetornoRest myAccessPoints(@QueryParam("apList") String jsonApList, 
+									  @QueryParam("matricula") String matricula){
+
+		JsonParser parser = new JsonParser();
+		JsonElement element = parser.parse(jsonApList);
+		JsonArray apListJson = element.getAsJsonArray();
+		Usuario user = new Usuario();
+		RetornoRest ret = new RetornoRest();
+		
+		System.out.println("Atualizando dados dos APS.");
+		
+		user.setMatricula(matricula);
+		
+		if (user.updateAps(apListJson)){
+			ret.setStatus(true);
+		}else{
+			ret.setStatus(false);
+		}
+		
+		return ret;
+	}
+	
+	@GET
+	@Path("/getLocation")
+	@Produces(MediaType.APPLICATION_JSON)
+	public RetornoRest getLocation(@QueryParam("matricula") String matricula){
+		RetornoRest ret = new RetornoRest();
+		Usuario user = new Usuario();
+		user.setMatricula(matricula);
+		if (!user.locate()){
+			ret.setStatus(false);
+		}else{
+			ret.setStatus(true);
+		}
+		ret.setMsg(user.getMsg_erro());
+		
+		return ret;
+	}
 	
 	/*
 	 * Busca a própria localização.
@@ -147,7 +204,7 @@ public class UsuarioResource {
 		JsonParser parser = new JsonParser();
 		JsonElement element = parser.parse(jsonApList);
 		JsonArray apListJson = element.getAsJsonArray();
-		
+
 		RetornoRest ret = new RetornoRest();
 		PredictionRequest request = new PredictionRequest();
 		for(Object js : apListJson){
@@ -163,5 +220,33 @@ public class UsuarioResource {
 		//ret.setObjeto(room);
 		return ret;
 	}
+	
+	/*
+	 * GET: URL: http://localhost:8080/FindMe-Server/usuario/update?matricula=113001625&email=lalala@gmail.com&nome=Lucas Konrad França&first_login=S&senha=123&data_nascimento=29091992
+	 * 
+	 * */
+	
+	@Path("/updateToken")
+	@GET 
+	@Produces(MediaType.APPLICATION_JSON) 
+	public RetornoRest updateToken(@DefaultValue(" ") @QueryParam("matricula") String matricula,
+			                      @DefaultValue(" ") @QueryParam("token") String token) { 
+		RetornoRest ret = new RetornoRest();
+		Usuario user = new Usuario();
+		user.setMatricula(matricula);
+		
+		if(user.updateToken(token)){
+			ret.setStatus(true);
+			ret.setMsg("Token atualizado com sucesso.");
+			ret.setObjeto(null);					
+		}else{
+			ret.setStatus(false);
+			ret.setMsg("Ocorreram erros ao atualizar o token do usuário.");
+			ret.setObjeto(null);
+		}
+		
+		return ret;
+	} 
+	
 	
 }

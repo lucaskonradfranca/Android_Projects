@@ -7,13 +7,29 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabWidget;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
+import java.net.URLEncoder;
+
 import findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.Model.Usuario;
+import findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.util.AppUtil;
 
 public class PrincipalActivity extends FragmentActivity {
     private FragmentTabHost mTabHost;
@@ -82,9 +98,49 @@ public class PrincipalActivity extends FragmentActivity {
                         SharedPreferences preferences = getSharedPreferences("LoginActivityPreferences", MODE_PRIVATE);
 
                         SharedPreferences.Editor editor = preferences.edit();
-
+                        String matricula = preferences.getString("matricula","");
                         editor.clear();
                         editor.commit();
+
+                        //apaga o token do usuário
+                        RequestQueue mRequestQueue;
+
+                        // Set up the network to use HttpURLConnection as the HTTP client.
+                        Network network = new BasicNetwork(new HurlStack());
+
+                        // Instantiate the cache
+                        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+
+                        // Instantiate the RequestQueue with the cache and network.
+                        mRequestQueue = new RequestQueue(cache, network);
+
+                        String url = null;
+
+                        try{
+                            url = AppUtil.getServer() + "usuario/updateToken?matricula="+ URLEncoder.encode(matricula,"UTF-8")+"&token=";
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
+                        // Start the queue
+                        mRequestQueue.start();
+                        JsonObjectRequest request = new JsonObjectRequest
+                                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Log.d("TOKEN","response - OK");
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        // TODO Auto-generated method stub
+                                        error.printStackTrace();
+                                    }
+                                });
+
+                        mRequestQueue.add(request);
+
                         finish();
                     }
                 });

@@ -1,0 +1,32 @@
+digraph "services.PredictionService.predict"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node32 [label="services.PredictionService.predict",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node32 -> Node33 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node33 [label="services.PredictionService.generate\lTestData",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classservices_1_1_prediction_service.html#af78d811944d75b0cb0fe6eb26d0939d4"];
+  Node33 -> Node34 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node34 [label="services.LocationService.get\lInstance",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classservices_1_1_location_service.html#aa8bbad3b03cffaf61749c7812d5ee938"];
+  Node34 -> Node35 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node35 [label="services.LocationService.\lLocationService",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classservices_1_1_location_service.html#a85f8c2226b17fb1dbc11c707f4c8cd73"];
+  Node33 -> Node36 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node36 [label="services.LocationService.get\lAccessPoints",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classservices_1_1_location_service.html#a03aad0851039778cf376564f6edec050"];
+  Node33 -> Node37 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node37 [label="services.RoomService.get\lInstance",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classservices_1_1_room_service.html#adeddcdbaafe6b272b588002ff3d4d777"];
+  Node37 -> Node38 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node38 [label="services.RoomService.Room\lService",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classservices_1_1_room_service.html#a6295cfa7e099005f2f90b9dd5fef09c6"];
+  Node33 -> Node39 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node39 [label="services.RoomService.getAll",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classservices_1_1_room_service.html#a8638ce31ba01c962ea29c35afc824b4c"];
+  Node33 -> Node40 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node40 [label="models.Room.getId",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmodels_1_1_room.html#aaaad799593d83ad80c2dad8e5fe89386"];
+  Node33 -> Node41 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node41 [label="models.PredictionRequest.get\lAccessPointData",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmodels_1_1_prediction_request.html#a957acdde4dff28570b2eb330b43b8462"];
+  Node33 -> Node42 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node42 [label="models.AccessPoint.getBssid",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmodels_1_1_access_point.html#a04df3ab2ab8f3ed999c683d0ec370d00"];
+  Node32 -> Node37 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node32 -> Node43 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node43 [label="services.RoomService.getById",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classservices_1_1_room_service.html#a855ab52b7c9c4df961834b7d30b8a3e1"];
+  Node32 -> Node44 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node44 [label="models.Room.getName",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmodels_1_1_room.html#afa2e4c7e57161ee678186e14af02eec6"];
+}
