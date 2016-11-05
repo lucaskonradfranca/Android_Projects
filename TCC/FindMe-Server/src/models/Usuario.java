@@ -216,7 +216,8 @@ public class Usuario {
 			usuarios = null;
 		}else{
 			//ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM usuario WHERE matricula <> '"+matricula+"' ORDER BY nome; ");
-			ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM usuario ORDER BY nome; ");
+			ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM usuario "
+					+ " WHERE usuario.matricula IN ( SELECT amigos.matricula_amigo FROM amigos WHERE amigos.matricula = '"+matricula+"') ORDER BY nome; ");
 			try{
 				boolean achou = false;
 				while (rs.next()){
@@ -246,6 +247,56 @@ public class Usuario {
 		return usuarios;
 	}
 
+	public List<Usuario> getUsuarios(String filtro){
+		List<Usuario> usuarios = new ArrayList<Usuario>();
+		
+		Connection con = ConexaoBD.getConexaoSQL();
+		
+		if (con == null){
+			setMsg_erro(ConexaoBD.msgErro);
+			usuarios = null;
+		}else{
+			String query = " SELECT * "
+					       + " FROM usuario "
+					      + " WHERE matricula <> '" + this.matricula + "' ";
+			
+			if (! filtro.equals(" ") && ! filtro.isEmpty()){
+				query += " AND nome LIKE '%" + filtro + "%' ";
+			}
+			
+			query += " AND matricula NOT IN (SELECT amigos.matricula_amigo FROM amigos WHERE amigos.matricula = '"+this.matricula+"')";
+			
+			query += " ORDER BY nome; ";
+			
+			ResultSet rs = ConexaoBD.consultar(con, query);
+			try{
+				boolean achou = false;
+				while (rs.next()){
+					achou = true;
+					usuarios.add(new Usuario(rs.getString("matricula"),
+							rs.getString("nome"),
+							rs.getString("email"),
+							"senha",
+							rs.getString("data_nascimento"),
+							rs.getString("first_login"),
+							rs.getInt("nivel_privacidade")));
+				}
+				if (!achou){
+					setMsg_erro("Nenhum usuário encontrado.");
+				}
+			}catch (SQLException e){
+				e.printStackTrace();
+				setMsg_erro("Erro ao buscar usuarios." + e.getMessage());
+				usuarios = null;
+			}catch (Exception e){
+				e.printStackTrace();
+				setMsg_erro("Erro ao buscar usuarios." + e.getMessage());
+				usuarios = null;
+			}
+		}
+		
+		return usuarios;
+	}
 	public Usuario getUsuario(String matriculaUser){
 		Usuario user = new Usuario();
 
@@ -270,7 +321,7 @@ public class Usuario {
 		return user;
 	}
 	
-	public boolean updateAps(JsonArray apList){
+	public boolean updateAps(JsonArray apList, String usuarioOrigem){
 		boolean status = true;
 		
 		if (this.matricula.isEmpty()){
@@ -280,12 +331,12 @@ public class Usuario {
 			String query = "";
 			int result = 0;
 			
-			query = "DELETE FROM usuario_aps WHERE matricula = '" + this.matricula + "'; ";
+			query = "DELETE FROM usuario_aps WHERE matricula = '" + this.matricula + "' AND usuario_origem = '"+usuarioOrigem+"'; ";
 			result = ConexaoBD.execute(con,query);
 			if (result < 0){
 				status = false;
 			}else{
-				query = " INSERT INTO usuario_aps (matricula, bssid, ssid, rssi, sequencia) VALUES ";
+				query = " INSERT INTO usuario_aps (matricula, bssid, ssid, rssi, sequencia, usuario_origem) VALUES ";
 				boolean virgula = false;
 				int sequencia = 0;
 				for(Object js : apList){
@@ -298,7 +349,8 @@ public class Usuario {
 							+ "'" + ap.getBSSID() + "', "
 							+ "'" + ap.getSSID() + "', "
 							      + ap.getRSSI() + ", "
-							      + sequencia + " ) ";
+							      + sequencia + ", " 
+							+ "'" + usuarioOrigem + "' ) ";
 					virgula = true;
 					sequencia++;
 				}
@@ -339,12 +391,90 @@ public class Usuario {
 		return retorno;
 	}
 	
-	public boolean locate(){
+	public boolean adicionar(String matriculaAmigo){
+		boolean retorno = true;
+		String query = "";
+		if (this.matricula.isEmpty() || matriculaAmigo.isEmpty()){
+			retorno = false;
+			this.msg_erro = "Matricula do usuário/amigo em branco.";
+		}else{
+			Connection con = ConexaoBD.getConexaoSQL();
+			ResultSet rsAmigo = ConexaoBD.consultar(con, "SELECT * FROM amigos WHERE matricula = '"+this.matricula+"' AND matricula_amigo = '" + matriculaAmigo + "' ; ");
+			try{
+				if (rsAmigo.first()){
+					this.msg_erro = "Você já é amigo desse usuário.";
+					return false;
+				}else{
+					ResultSet rsSolicitacao = ConexaoBD.consultar(con, "SELECT * FROM solicitacao_amigo WHERE matricula = '"+this.matricula+"' AND matricula_amigo = '" + matriculaAmigo + "' ; ");
+					if (rsSolicitacao.first()){
+						this.msg_erro = "Você já enviou uma solicitação de amizade para esse usuário.";
+						return false;
+					}else{
+						rsSolicitacao = ConexaoBD.consultar(con, "SELECT * FROM solicitacao_amigo WHERE matricula = '"+ matriculaAmigo +"' AND matricula_amigo = '" + this.matricula + "' ; ");
+						if (rsSolicitacao.first()){
+							this.msg_erro = "Esse usuário já enviou uma solicitação de amizade para você.";
+							return false;
+						}else{
+							query = " INSERT INTO solicitacao_amigo (matricula, matricula_amigo)"
+									+ " VALUES ( '" + this.matricula + "', "
+									         + " '" + matriculaAmigo + "' )";
+							
+							if (ConexaoBD.execute(con,query) < 0){
+								this.msg_erro = "Ocorreram erros na inclusão da solicitação. Tente novamente.";
+								return false;
+							}else{
+								retorno = true;
+							}
+						}
+					}
+				}
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return retorno;
+	}
+	
+	public boolean excluir(String matriculaAmigo){
+		boolean retorno = true;
+		String query = "";
+		if (this.matricula.isEmpty() || matriculaAmigo.isEmpty()){
+			retorno = false;
+			this.msg_erro = "Matricula do usuário/amigo em branco.";
+		}else{
+			Connection con = ConexaoBD.getConexaoSQL();
+			ResultSet rsAmigo = ConexaoBD.consultar(con, "SELECT * FROM amigos WHERE matricula = '"+this.matricula+"' AND matricula_amigo = '" + matriculaAmigo + "' ; ");
+			try{
+				if (rsAmigo.first()){
+					
+					query = " DELETE FROM amigos WHERE (matricula = '"+this.matricula+"' AND matricula_amigo = '" + matriculaAmigo + "')"
+							+ " OR (matricula = '"+matriculaAmigo+"' AND matricula_amigo = '" + this.matricula + "');  ";
+					
+					if (ConexaoBD.execute(con,query) < 0){
+						this.msg_erro = "Ocorreram erros na exclusão do amigo. Tente novamente.";
+						return false;
+					}else{
+						retorno = true;
+					}
+				}else{
+					this.msg_erro = "Você não é amigo desse usuário.";
+					return false;
+				}
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return retorno;
+	}
+	
+	public boolean locate(String usuarioOrigem){
 		boolean status = false;
 		
 		//primeiro verifica se o usuário tem o token do dispositivo cadastrado.
 		Connection con = ConexaoBD.getConexaoSQL();
-		ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM usuario_token WHERE matricula = '"+this.matricula+"'; ");
+		ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM usuario_token WHERE matricula = '"+this.matricula+"' ; ");
 		String token = "";
 		String query = "";
 		int result = 0;
@@ -356,7 +486,7 @@ public class Usuario {
 					return false;
 				}else{
 					//Exclui as informações dos APS disponíveis desse usuário, e tenta recuperar as informações atualizadas.
-					query = "DELETE FROM usuario_aps WHERE matricula = '" + this.matricula + "'; ";
+					query = "DELETE FROM usuario_aps WHERE matricula = '" + this.matricula + "' AND usuario_origem = '"+usuarioOrigem+"' ; ";
 					result = ConexaoBD.execute(con,query);
 					if (result < 0){
 						this.msg_erro = "Ocorreram erros ao atualizar as informações do usuário.";
@@ -372,7 +502,7 @@ public class Usuario {
 					message.put("priority", "high");
 					
 					JSONObject data = new JSONObject();
-					data.put("request", "update_aps");
+					data.put("request", usuarioOrigem);
 					
 					message.put("data", data);
 					
@@ -391,7 +521,7 @@ public class Usuario {
 						if (tentativa >= 5){
 							continua = false;
 						}
-						rsAps = ConexaoBD.consultar(con, "SELECT * FROM usuario_aps WHERE matricula = '"+this.matricula+"' ORDER BY sequencia; ");
+						rsAps = ConexaoBD.consultar(con, "SELECT * FROM usuario_aps WHERE matricula = '"+this.matricula+"' AND usuario_origem = '"+usuarioOrigem+"' ORDER BY sequencia; ");
 						 if (rsAps.first()){
 							 continua = false;
 						 }else{
@@ -424,6 +554,156 @@ public class Usuario {
 			e.printStackTrace();
 			this.msg_erro = "Ocorreram erros no programa. " + e.getMessage();
 		}
+		return status;
+	}
+	
+	public List<Usuario> getSolicitacoesAmizade(String matricula){
+		List<Usuario> usuarios = new ArrayList<Usuario>();
+		Connection con = ConexaoBD.getConexaoSQL();
+		
+		if (con == null){
+			setMsg_erro(ConexaoBD.msgErro);
+			usuarios = null;
+		}else{
+			ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM usuario "
+					+ " WHERE usuario.matricula IN ( SELECT solicitacao_amigo.matricula FROM solicitacao_amigo"
+											 	 + "  WHERE matricula_amigo = '" + matricula + "' ) ORDER BY nome; ");
+			try{
+				boolean achou = false;
+				while (rs.next()){
+					achou = true;
+					usuarios.add(new Usuario(rs.getString("matricula"),
+							rs.getString("nome"),
+							rs.getString("email"),
+							"senha",
+							rs.getString("data_nascimento"),
+							rs.getString("first_login"),
+							rs.getInt("nivel_privacidade")));
+				}
+				if (!achou){
+					setMsg_erro("Nenhum usuário encontrado.");
+				}
+			}catch (SQLException e){
+				e.printStackTrace();
+				setMsg_erro("Erro ao buscar usuarios." + e.getMessage());
+				usuarios = null;
+			}catch (Exception e){
+				e.printStackTrace();
+				setMsg_erro("Erro ao buscar usuarios." + e.getMessage());
+				usuarios = null;
+			}
+		}
+		return usuarios;
+	}
+	
+	public boolean atualizaSolicitacaoAmizade(String matriculaAmigo, String aceito){
+		boolean status = false;
+		
+		Connection con = ConexaoBD.getConexaoSQL();
+		
+		if (con == null){
+			setMsg_erro(ConexaoBD.msgErro);
+		}else{
+			ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM solicitacao_amigo "
+											 	 + "  WHERE matricula_amigo = '" + this.matricula + "' "
+											 	 + "    AND matricula       = '" + matriculaAmigo + "' ; ");
+			try{
+				if (rs.first()){
+					if (aceito.equals("S")){
+						String query = " INSERT INTO amigos (matricula, matricula_amigo) ";
+						query += " VALUES ('"+this.matricula+"', '"+matriculaAmigo+"'), ";
+						query +=         "('"+matriculaAmigo+"', '"+this.matricula+"'); ";
+						query += " DELETE FROM solicitacao_amigo "
+								+ " WHERE matricula_amigo = '" + this.matricula + "' "
+								+ "   AND matricula       = '" + matriculaAmigo + "' ; ";
+						int result = ConexaoBD.execute(con,query);
+						if (result < 0){
+							setMsg_erro("Ocorreram erros ao aceitar a solicitação. Tente novamente.");
+							return false;
+						}else{
+							status = true;
+						}
+					}else{
+						int result = ConexaoBD.execute(con," DELETE FROM solicitacao_amigo "
+								+ " WHERE matricula_amigo = '" + this.matricula + "' "
+								+ "   AND matricula       = '" + matriculaAmigo + "' ; ");
+						if (result < 0){
+							setMsg_erro("Ocorreram erros ao recusar a solicitação. Tente novamente.");
+							return false;
+						}else{
+							status = true;
+						}
+					}
+				}else{
+					setMsg_erro("Não existem solicitações de amizade para esse usuário.");
+					return false;
+				}
+				
+			}catch (SQLException e){
+				e.printStackTrace();
+				setMsg_erro("Erro ao buscar usuarios." + e.getMessage());
+			}catch (Exception e){
+				e.printStackTrace();
+				setMsg_erro("Erro ao buscar usuarios." + e.getMessage());
+			}
+		}
+		
+		return status;
+	}
+	
+	public boolean bloquear(String matriculaAmigo, String block){
+		boolean status = false;
+		
+		Connection con = ConexaoBD.getConexaoSQL();
+		
+		if (con == null){
+			setMsg_erro(ConexaoBD.msgErro);
+		}else{
+			String query = " SELECT * FROM amigos_bloqueados "
+					+ " WHERE matricula = '" + this.matricula + "'"
+					+ " AND   matricula_amigo = '" + matriculaAmigo + "'; ";
+			ResultSet rs = ConexaoBD.consultar(con, query);
+			try{
+				if (rs.first()){
+					if (block.equals("S")){
+						this.msg_erro = "Usuário já está bloqueado.";
+						return false;
+					}else{
+						int result = ConexaoBD.execute(con," DELETE FROM amigos_bloqueados "
+								+ " WHERE matricula = '" + this.matricula + "'"
+								+ " AND   matricula_amigo = '" + matriculaAmigo + "'; ");
+						if (result < 0){
+							setMsg_erro("Ocorreram erros ao desbloquear o amigo. Tente novamente.");
+							return false;
+						}else{
+							status = true;
+						}
+					}
+				}else{
+					if(block.equals("S")){
+						int result = ConexaoBD.execute(con, "INSERT INTO amigos_bloqueados (matricula, matricula_amigo)"
+								+ " VALUES ('"+this.matricula+"', '"+matriculaAmigo+"');  ");
+						if (result < 0){
+							setMsg_erro("Ocorreram erros ao bloquear o amigo. Tente novamente.");
+							return false;
+						}else{
+							status = true;
+						}
+					}else{
+						this.msg_erro = "Amigo já está desbloqueado.";
+						return false;
+					}
+				}
+				
+			}catch (SQLException e){
+				e.printStackTrace();
+				setMsg_erro("Erro ao buscar usuarios." + e.getMessage());
+			}catch (Exception e){
+				e.printStackTrace();
+				setMsg_erro("Erro ao buscar usuarios." + e.getMessage());
+			}
+		}
+		
 		return status;
 	}
 	

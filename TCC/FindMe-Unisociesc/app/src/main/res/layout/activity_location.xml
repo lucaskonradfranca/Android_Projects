@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.LocationActivity">
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:weightSum="1"
         android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/minha_localizacao"
+            android:id="@+id/idTxtNomeUsuario"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -20,17 +24,14 @@
             android:text="@string/minha_localizacao"
             android:id="@+id/idTxtLocal"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"/>
 
-        <ImageView
+        <WebView
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:background="@drawable/terreo"
-            android:id="@+id/idImagemLocal"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1.08" />
+            android:id="@+id/idWebViewLocation"/>
 
 
 
     </LinearLayout>
-</ScrollView>

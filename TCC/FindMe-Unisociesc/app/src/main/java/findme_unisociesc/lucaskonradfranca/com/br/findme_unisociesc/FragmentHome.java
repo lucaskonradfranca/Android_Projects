@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,7 +46,8 @@ import findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.util.AppUtil
 public class FragmentHome extends Fragment {
 
     private TextView textoLocalizacao;
-    private ImageView imagemLocalizacao;
+    //private ImageView imagemLocalizacao;
+    private WebView webView;
     private Button botaoLocalizar;
     private Button botaoAtualizar;
 
@@ -58,16 +61,17 @@ public class FragmentHome extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         textoLocalizacao = (TextView) view.findViewById(R.id.idTxtLocalizacao);
-        imagemLocalizacao = (ImageView) view.findViewById(R.id.idImagemLocalizacao);
-        botaoLocalizar = (Button) view.findViewById(R.id.idBotaoLocalizar);
+        //imagemLocalizacao = (ImageView) view.findViewById(R.id.idImagemLocalizacao);
+        webView = (WebView) view.findViewById(R.id.idWebViewHome);
+        //botaoLocalizar = (Button) view.findViewById(R.id.idBotaoLocalizar);
         botaoAtualizar = (Button) view.findViewById(R.id.idBotaoAtualizar);
 
-        botaoLocalizar.setOnClickListener(new View.OnClickListener() {
+        /*botaoLocalizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(view.getContext(),"Localizar um amigo",Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
         botaoAtualizar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +79,16 @@ public class FragmentHome extends Fragment {
                 getMyLocation(view);
             }
         });
+
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        webView.loadUrl("file:///android_asset/image.html");
+
+
 
         getMyLocation(view);
     }
@@ -220,8 +234,10 @@ public class FragmentHome extends Fragment {
 
                             if (status){
                                 textoLocalizacao.setText(getString(R.string.minha_localizacao)+ " " + msg);
+                                webView.loadUrl("file:///android_asset/image.html?sala="+msg);
                             }else{
                                 textoLocalizacao.setText("Não foi possível identificar a sua localização.");
+                                webView.loadUrl("file:///android_asset/image.html");
                             }
                         }catch(Exception e){
                             e.printStackTrace();

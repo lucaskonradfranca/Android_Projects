@@ -31,8 +31,31 @@ import util.RetornoRest;
 public class UsuarioResource {
 
 	/*
-	 * GET URL: http://10.8.143.217:8080/FindMe-Server/usuario/getAmigos?matricula=113001625
+	 * GET URL: http://10.8.143.217:8080/FindMe-Server/usuario/getUsuarios?matricula=113001625&filtro=Joao
 	 * */
+	
+	
+	@Path("/getUsuarios")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public RetornoRest getUsuarios(@DefaultValue(" ") @QueryParam("matricula") String matricula,
+			@DefaultValue(" ") @QueryParam("filtro") String filtro){
+		System.out.println("GetUsuarios");
+		RetornoRest ret = new RetornoRest();
+		Usuario user = new Usuario();
+		user.setMatricula(matricula);
+		List<Usuario> usuarios = user.getUsuarios(filtro);
+		
+		if (usuarios == null){
+			ret.setStatus(false);
+			ret.setMsg(user.getMsg_erro());
+		}else{
+			ret.setStatus(true);
+		}
+	
+		ret.setObjeto(Response.ok(usuarios).build());
+		return ret;
+	}
 	
 	@Path("/getAmigos")
 	@GET
@@ -139,7 +162,8 @@ public class UsuarioResource {
 	@Path("/myAccessPoints")
 	@Produces(MediaType.APPLICATION_JSON)
 	public RetornoRest myAccessPoints(@QueryParam("apList") String jsonApList, 
-									  @QueryParam("matricula") String matricula){
+									  @QueryParam("matricula") String matricula,
+									  @QueryParam("usuarioOrigem") String usuarioOrigem){
 
 		JsonParser parser = new JsonParser();
 		JsonElement element = parser.parse(jsonApList);
@@ -151,7 +175,7 @@ public class UsuarioResource {
 		
 		user.setMatricula(matricula);
 		
-		if (user.updateAps(apListJson)){
+		if (user.updateAps(apListJson, usuarioOrigem)){
 			ret.setStatus(true);
 		}else{
 			ret.setStatus(false);
@@ -163,11 +187,13 @@ public class UsuarioResource {
 	@GET
 	@Path("/getLocation")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RetornoRest getLocation(@QueryParam("matricula") String matricula){
+	public RetornoRest getLocation(@QueryParam("matricula") String matricula, @QueryParam("usuarioOrigem") String usuarioOrigem){
+		/*matricula = matricula do usuário que será localizado
+		 * usuarioOrigem = matrícula do usuário que solicitou a localização*/
 		RetornoRest ret = new RetornoRest();
 		Usuario user = new Usuario();
 		user.setMatricula(matricula);
-		if (!user.locate()){
+		if (!user.locate(usuarioOrigem)){
 			ret.setStatus(false);
 		}else{
 			ret.setStatus(true);
@@ -248,5 +274,113 @@ public class UsuarioResource {
 		return ret;
 	} 
 	
+	/*
+	 * GET URL: http://10.8.143.217:8080/FindMe-Server/usuario/adicionar?matricula=113001625&matriculaAmigo=113001626
+	 * */
+	
+	
+	@Path("/adicionar")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public RetornoRest adicionar(@DefaultValue(" ") @QueryParam("matricula") String matricula,
+			@DefaultValue(" ") @QueryParam("matriculaAmigo") String matriculaAmigo){
+		System.out.println("adicionar");
+		RetornoRest ret = new RetornoRest();
+		Usuario user = new Usuario();
+		user.setMatricula(matricula);
+		
+		if (user.adicionar(matriculaAmigo)){
+			ret.setStatus(true);
+		}else{
+			ret.setStatus(false);
+			ret.setMsg(user.getMsg_erro());
+		}
+	
+		return ret;
+	}
+	
+	/*
+	 * GET URL: http://10.8.143.217:8080/FindMe-Server/usuario/adicionar?matricula=113001625&matriculaAmigo=113001626
+	 * */
+	
+	
+	@Path("/getSolicitacaoAmizade")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public RetornoRest getSolicitacaoAmizade(@DefaultValue(" ") @QueryParam("matricula") String matricula){
+		System.out.println("getSolicitacaoAmizade");
+		RetornoRest ret = new RetornoRest();
+		Usuario user = new Usuario();
+		List<Usuario> usuarios = user.getSolicitacoesAmizade(matricula);
+		
+		if (usuarios == null){
+			ret.setStatus(false);
+			ret.setMsg(user.getMsg_erro());
+		}else{
+			ret.setStatus(true);
+		}
+	
+		ret.setObjeto(Response.ok(usuarios).build());
+		return ret;
+	}
+	
+	@Path("/atualizaSolicitacaoAmizade")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public RetornoRest atualizaSolicitacaoAmizade(@DefaultValue(" ") @QueryParam("matricula") String matricula,
+			@DefaultValue(" ") @QueryParam("matriculaAmigo") String matriculaAmigo,
+			@DefaultValue(" ") @QueryParam("aceito") String aceito){
+		System.out.println("atualizaSolicitacaoAmizade");
+		RetornoRest ret = new RetornoRest();
+		Usuario user = new Usuario();
+		user.setMatricula(matricula);
+		
+		if (user.atualizaSolicitacaoAmizade(matriculaAmigo, aceito)){
+			ret.setStatus(true);
+		}else{
+			ret.setStatus(false);
+			ret.setMsg(user.getMsg_erro());
+		}
+		return ret;
+	}
+	
+	@Path("/bloquear")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public RetornoRest bloquear(@DefaultValue(" ") @QueryParam("matricula") String matricula,
+			@DefaultValue(" ") @QueryParam("matriculaAmigo") String matriculaAmigo,
+			@DefaultValue(" ") @QueryParam("block") String block){
+		System.out.println("bloquear");
+		RetornoRest ret = new RetornoRest();
+		Usuario user = new Usuario();
+		user.setMatricula(matricula);
+		
+		if (user.bloquear(matriculaAmigo, block)){
+			ret.setStatus(true);
+		}else{
+			ret.setStatus(false);
+			ret.setMsg(user.getMsg_erro());
+		}
+		return ret;
+	}
+	
+	@Path("/excluir")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public RetornoRest excluir(@DefaultValue(" ") @QueryParam("matricula") String matricula,
+			@DefaultValue(" ") @QueryParam("matriculaAmigo") String matriculaAmigo){
+		System.out.println("excluir");
+		RetornoRest ret = new RetornoRest();
+		Usuario user = new Usuario();
+		user.setMatricula(matricula);
+		
+		if (user.excluir(matriculaAmigo)){
+			ret.setStatus(true);
+		}else{
+			ret.setStatus(false);
+			ret.setMsg(user.getMsg_erro());
+		}
+		return ret;
+	}
 	
 }

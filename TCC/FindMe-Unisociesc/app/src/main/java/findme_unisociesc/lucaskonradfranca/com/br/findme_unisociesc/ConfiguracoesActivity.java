@@ -63,31 +63,26 @@ public class ConfiguracoesActivity extends Activity {
 
         RadioButton rbTodos     = (RadioButton) findViewById(R.id.idRBTodos);
         RadioButton rbAmigos    = (RadioButton) findViewById(R.id.idRBAmigos);
-        RadioButton rbNotificar = (RadioButton) findViewById(R.id.idRBNotificar);
         RadioButton rbNinguem   = (RadioButton) findViewById(R.id.idRBNinguem);
         switch (user.getNivel_privacidade()){
             case 0:
                 rbTodos.setChecked(true);
                 rbAmigos.setChecked(false);
-                rbNotificar.setChecked(false);
                 rbNinguem.setChecked(false);
                 break;
             case 1:
                 rbTodos.setChecked(false);
                 rbAmigos.setChecked(true);
-                rbNotificar.setChecked(false);
                 rbNinguem.setChecked(false);
                 break;
             case 2:
                 rbTodos.setChecked(false);
                 rbAmigos.setChecked(false);
-                rbNotificar.setChecked(true);
                 rbNinguem.setChecked(false);
                 break;
             case 3:
                 rbTodos.setChecked(false);
                 rbAmigos.setChecked(false);
-                rbNotificar.setChecked(false);
                 rbNinguem.setChecked(true);
                 break;
         }
@@ -125,9 +120,6 @@ public class ConfiguracoesActivity extends Activity {
                             break;
                         case R.id.idRBAmigos:
                             nivel_privacidade = 1;
-                            break;
-                        case R.id.idRBNotificar:
-                            nivel_privacidade = 2;
                             break;
                         case R.id.idRBNinguem:
                             nivel_privacidade = 3;

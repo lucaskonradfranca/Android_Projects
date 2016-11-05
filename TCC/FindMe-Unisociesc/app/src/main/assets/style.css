@@ -1,0 +1,121 @@
+#idMarcador{
+ display: none;
+}
+
+.banheiro{
+   position: absolute;
+      top:350;
+         left:700;
+         width:50px;
+         height:50px;
+      display: block!important;
+}
+
+.none{
+   width:0px;
+   height:0px;
+}
+.b013{
+   position: absolute;
+   top:350;
+   left:700;
+   width:50px;
+   height:50px;
+   display: block!important;
+}
+.b011{
+   display: block!important;
+   position: absolute;
+   top:350;
+   left:1110;
+   width:50px;
+   height:50px;
+}
+.b009{
+   display: block!important;
+   position: absolute;
+   top:350;
+   left:1450;
+   width:50px;
+   height:50px;
+}
+.b007{
+   display: block!important;
+   position: absolute;
+   top:350;
+   left:1800;
+   width:50px;
+   height:50px;
+}
+.b005{
+   display: block!important;
+   position: absolute;
+   top:350;
+   left:2170;
+   width:50px;
+   height:50px;
+}
+.b003{
+   display: block!important;
+   position: absolute;
+   top:350;
+   left:2500;
+   width:50px;
+   height:50px;
+}
+.b001{
+   display: block!important;
+   position: absolute;
+   top:340;
+   left:3250;
+   width:50px;
+   height:50px;
+}
+.b012{
+   display: block!important;
+   position: absolute;
+   top:770;
+   left:710;
+   width:50px;
+   height:50px;
+}
+.b010{
+   display: block!important;
+   position: absolute;
+   top:770;
+   left:1115;
+   width:50px;
+   height:50px;
+}
+.b008{
+   display: block!important;
+   position: absolute;
+   top:770;
+   left:1458;
+   width:50px;
+   height:50px;
+}
+.b006{
+   display: block!important;
+   position: absolute;
+   top:770;
+   left:1800;
+   width:50px;
+   height:50px;
+}
+.b004{
+   display: block!important;
+   position: absolute;
+   top:770;
+   left:2155;
+   width:50px;
+   height:50px;
+}
+.b002{
+   display: block!important;
+   position: absolute;
+   top:770;
+   left:3250;
+   width:50px;
+   height:50px;
+}

@@ -55,11 +55,6 @@
                     android:text="Apenas amigos"
                     android:id="@+id/idRBAmigos" />
 
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Notificar"
-                    android:id="@+id/idRBNotificar" />
 
                 <RadioButton
                     android:layout_width="wrap_content"

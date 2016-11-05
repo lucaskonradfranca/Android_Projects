@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_buscar_amigos"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.BuscarAmigosActivity">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/idEditTextNome"
+        android:layout_toStartOf="@+id/idImgViewBuscar"
+        android:capitalize="words"
+        android:hint="Nome" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/idImgViewBuscar"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:elevation="0dp"
+        android:layout_alignBottom="@+id/idEditTextNome"
+        android:background="@drawable/ic_action_name" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/idEditTextNome"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="18dp"
+        android:id="@+id/idListViewUsuarios" />
+</RelativeLayout>

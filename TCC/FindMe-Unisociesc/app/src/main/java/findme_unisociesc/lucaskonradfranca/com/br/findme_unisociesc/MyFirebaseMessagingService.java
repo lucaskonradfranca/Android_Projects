@@ -93,11 +93,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService{
 
         String url = AppUtil.getServer() + "usuario/myAccessPoints?";
         Log.d("APS",jsonArray.toString());
+        String usuarioOrigem = remoteMessage.getData().get("request").toString();
+        Log.d("USUARIOORIGEM",usuarioOrigem);
         try{
             SharedPreferences preferences = getSharedPreferences("LoginActivityPreferences", MODE_PRIVATE);
             String matricula = preferences.getString("matricula","");
             url += "apList=" + URLEncoder.encode(jsonArray.toString(),"UTF-8");
             url += "&matricula=" + URLEncoder.encode(matricula, "UTF-8");
+            url += "&usuarioOrigem=" + URLEncoder.encode(usuarioOrigem,"UTF-8");
 
             URL urlObj = new URL(url);
             HttpURLConnection urlConnection = (HttpURLConnection) urlObj.openConnection();

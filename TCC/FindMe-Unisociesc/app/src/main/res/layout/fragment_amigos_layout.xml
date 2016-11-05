@@ -12,10 +12,20 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/atualizar"
+            android:text="Buscar amigos"
             android:id="@+id/idBotaoAtualizar"
             android:layout_gravity="top|center_horizontal" />
-
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/idLayoutTexto1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/idTxtSolicita1"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+        </RelativeLayout>
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -1,13 +1,7 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.PrincipalActivity">
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:weightSum="1"
         android:focusable="true"
         android:focusableInTouchMode="true">
@@ -17,18 +11,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
-                android:layout_width="195dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/botao_atualizar"
                 android:id="@+id/idBotaoAtualizar"
                 android:gravity="center"/>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/botao_localizar"
-                android:id="@+id/idBotaoLocalizar"
-                android:gravity="center"/>
         </LinearLayout>
 
         <TextView
@@ -40,15 +28,10 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp" />
 
-        <ImageView
+        <WebView
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:background="@drawable/terreo"
-            android:id="@+id/idImagemLocalizacao"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1.08" />
-
+            android:id="@+id/idWebViewHome"/>
 
 
     </LinearLayout>
-</ScrollView>

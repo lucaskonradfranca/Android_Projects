@@ -24,27 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PrincipalActivity" />
-        <activity
-            android:name=".CadastroActivity"
-            android:label="@string/botao_cadastrar"
-            android:parentActivityName=".LoginActivity" />
-        <activity
-            android:name=".SobreActivity"
-            android:label="@string/sobre"
-            android:parentActivityName=".PrincipalActivity" />
-        <activity
-            android:name=".ConfiguracoesActivity"
-            android:label="@string/tabConfig"
-            android:parentActivityName=".PrincipalActivity" />
-        <activity
-            android:name=".ConfigUserActivity"
-            android:label="@string/ConfigUser"
-            android:parentActivityName=".ConfiguracoesActivity" />
-
-        <activity android:name=".LocationActivity"
-            android:label="Localização"
-            android:parentActivityName=".PrincipalActivity"></activity>
 
         <service
             android:name=".MyFirebaseMessagingService"
@@ -62,6 +41,32 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".PrincipalActivity" />
+        <activity
+            android:name=".CadastroActivity"
+            android:label="@string/botao_cadastrar"
+            android:parentActivityName=".LoginActivity" />
+        <activity
+            android:name=".SobreActivity"
+            android:label="@string/sobre"
+            android:parentActivityName=".PrincipalActivity" />
+        <activity
+            android:name=".ConfiguracoesActivity"
+            android:label="@string/tabConfig"
+            android:parentActivityName=".PrincipalActivity" />
+        <activity
+            android:name=".ConfigUserActivity"
+            android:label="@string/ConfigUser"
+            android:parentActivityName=".ConfiguracoesActivity" />
+        <activity
+            android:name=".LocationActivity"
+            android:label="Localização"
+            android:parentActivityName=".PrincipalActivity" />
+        <activity android:name=".BuscarAmigosActivity"
+            android:label="Buscar amigos"
+            android:parentActivityName=".PrincipalActivity"></activity>
+
 
 
     </application>

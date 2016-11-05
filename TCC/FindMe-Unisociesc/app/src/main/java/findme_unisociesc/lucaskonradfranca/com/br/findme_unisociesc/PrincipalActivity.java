@@ -69,6 +69,9 @@ public class PrincipalActivity extends FragmentActivity {
         mTabHost.addTab(
                 mTabHost.newTabSpec("tabAmigos").setIndicator(null, getDrawable(R.drawable.ic_action_amigos)),
                 FragmentAmigos.class, null);
+        mTabHost.addTab(
+                mTabHost.newTabSpec("tabAddAmigos").setIndicator(null, getDrawable(R.drawable.ic_request_frients)),
+                FragmentSolicitaAmigos.class, null);
 
         TabWidget tabWidget = mTabHost.getTabWidget();
     }

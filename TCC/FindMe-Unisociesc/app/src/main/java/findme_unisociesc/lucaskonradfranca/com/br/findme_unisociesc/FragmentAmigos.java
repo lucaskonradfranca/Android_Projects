@@ -18,6 +18,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -46,6 +48,9 @@ public class FragmentAmigos extends Fragment{
     private ListView listaAmigos;
     private Button botaoBuscarAmigos;
 
+    private TextView txtResult;
+    private RelativeLayout layoutTexto;
+
     private ArrayList<String> amigos = new ArrayList<String>();
     private ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
     @Override
@@ -55,7 +60,12 @@ public class FragmentAmigos extends Fragment{
         listaAmigos = (ListView) view.findViewById(R.id.idListaAmigos);
         botaoBuscarAmigos = (Button) view.findViewById(R.id.idBotaoAtualizar);
 
-        if (amigos.size() < 1){
+        txtResult = (TextView) view.findViewById(R.id.idTxtSolicita1);
+        layoutTexto = (RelativeLayout) view.findViewById(R.id.idLayoutTexto1);
+
+        carregarAmigos(view);
+
+        /*if (amigos.size() < 1){
             carregarAmigos(view);
         }else{
             ArrayAdapter<String> amigosAdapter = new ArrayAdapter<String>(view.getContext(),
@@ -64,7 +74,7 @@ public class FragmentAmigos extends Fragment{
                     amigos);
 
             listaAmigos.setAdapter(amigosAdapter);
-        }
+        }*/
 
         listaAmigos.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -73,6 +83,7 @@ public class FragmentAmigos extends Fragment{
                 final CharSequence[] items = {
                         getString(R.string.evento_localizar),
                         getString(R.string.evento_bloquear),
+                        "Desbloquar",
                         getString(R.string.evento_excluir)
                 };
 
@@ -86,10 +97,13 @@ public class FragmentAmigos extends Fragment{
                                 localizar(position, viewItm);
                                 break;
                             case 1:
-                                Toast.makeText(getContext(), "Bloquear amigo" + amigo, Toast.LENGTH_SHORT).show();
+                                blockUsuario(position, true, viewItm); //bloquear
                                 break;
                             case 2:
-                                Toast.makeText(getContext(), "Excluir amigo" + amigo, Toast.LENGTH_SHORT).show();
+                                blockUsuario(position, false, viewItm); //desbloquar
+                                break;
+                            case 3:
+                                excluir(position, viewItm);
                                 break;
                         }
                     }
@@ -103,10 +117,176 @@ public class FragmentAmigos extends Fragment{
         botaoBuscarAmigos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                carregarAmigos(view);
+                procurarAmigos(view);
             }
         });
 
+    }
+
+    private void excluir(int position, final View view) {
+        final ProgressDialog progress = AppUtil.getProgress(view.getContext(),getString(R.string.carregando),"Processando");
+        progress.show();
+
+        RequestQueue mRequestQueue;
+
+        // Set up the network to use HttpURLConnection as the HTTP client.
+        Network network = new BasicNetwork(new HurlStack());
+
+        // Instantiate the cache
+        Cache cache = new DiskBasedCache(view.getContext().getCacheDir(), 1024 * 1024); // 1MB cap
+
+        // Instantiate the RequestQueue with the cache and network.
+        mRequestQueue = new RequestQueue(cache, network);
+
+        String url = "";
+
+        Gson gson = new Gson();
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("LoginActivityPreferences", Context.MODE_PRIVATE);
+        String json = sharedPreferences.getString("objUsuario","");
+        Usuario user = gson.fromJson(json, Usuario.class);
+        String matriculaAmigo = listaUsuarios.get(position).getMatricula();
+        try{
+            url = AppUtil.getServer() + "usuario/excluir?matricula="+ URLEncoder.encode(user.getMatricula(),"UTF-8");
+            url += "&matriculaAmigo=" + URLEncoder.encode(matriculaAmigo,"UTF-8");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // Start the queue
+        mRequestQueue.start();
+        JsonObjectRequest request = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        boolean status = false;
+                        String msg;
+                        try{
+                            status = response.getBoolean("status");
+                            msg = response.getString("msg");
+
+                            if (status){
+                                AppUtil.exibeMensagem((Activity) view.getContext(),"Sucesso","Amigo excluído com sucesso.",R.drawable.ic_alert);
+                            }else{
+                                AppUtil.exibeMensagem((Activity) view.getContext(),"Erro","Ocorreram erros ao excluir o amigo. " + msg ,R.drawable.ic_alert);
+                            }
+
+                            carregarAmigos(view);
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            status = false;
+                            msg = "Erro no parse do retorno da requisição.";
+                        }
+
+                        progress.dismiss();
+
+                        if (! status){
+                            AppUtil.exibeMensagem((Activity) view.getContext(),"Erro",msg,R.drawable.ic_alert);
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        progress.dismiss();
+                        AppUtil.exibeMensagem((Activity) view.getContext(),getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
+                    }
+                });
+
+        mRequestQueue.add(request);
+
+
+        progress.dismiss();
+    }
+
+    private void blockUsuario(int position, final boolean bloquear, final View view) {
+        final ProgressDialog progress = AppUtil.getProgress(view.getContext(),getString(R.string.carregando),"Processando");
+        progress.show();
+
+        RequestQueue mRequestQueue;
+
+        // Set up the network to use HttpURLConnection as the HTTP client.
+        Network network = new BasicNetwork(new HurlStack());
+
+        // Instantiate the cache
+        Cache cache = new DiskBasedCache(view.getContext().getCacheDir(), 1024 * 1024); // 1MB cap
+
+        // Instantiate the RequestQueue with the cache and network.
+        mRequestQueue = new RequestQueue(cache, network);
+
+        String url = "";
+
+        Gson gson = new Gson();
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("LoginActivityPreferences", Context.MODE_PRIVATE);
+        String json = sharedPreferences.getString("objUsuario","");
+        Usuario user = gson.fromJson(json, Usuario.class);
+        String matriculaAmigo = listaUsuarios.get(position).getMatricula();
+        try{
+            url = AppUtil.getServer() + "usuario/bloquear?matricula="+ URLEncoder.encode(user.getMatricula(),"UTF-8");
+            url += "&matriculaAmigo=" + URLEncoder.encode(matriculaAmigo,"UTF-8");
+            if (bloquear){
+                url+= "&block=S";
+            }else{
+                url+= "&block=N";
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // Start the queue
+        mRequestQueue.start();
+        JsonObjectRequest request = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        boolean status = false;
+                        String msg;
+                        try{
+                            status = response.getBoolean("status");
+                            msg = response.getString("msg");
+
+                            if (status){
+                                if (bloquear){
+                                    AppUtil.exibeMensagem((Activity) view.getContext(),"Sucesso","Amigo bloqueado com sucesso.",R.drawable.ic_alert);
+                                }else{
+                                    AppUtil.exibeMensagem((Activity) view.getContext(),"Sucesso","Amigo desbloqueado com sucesso.",R.drawable.ic_alert);
+                                }
+                            }
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            status = false;
+                            msg = "Erro no parse do retorno da requisição.";
+                        }
+
+                        progress.dismiss();
+
+                        if (! status){
+                            AppUtil.exibeMensagem((Activity) view.getContext(),"Erro",msg,R.drawable.ic_alert);
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        progress.dismiss();
+                        AppUtil.exibeMensagem((Activity) view.getContext(),getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
+                    }
+                });
+
+        mRequestQueue.add(request);
+
+
+        progress.dismiss();
+    }
+
+    private void procurarAmigos(View view) {
+
+        startActivity(new Intent(getActivity(),BuscarAmigosActivity.class));
     }
 
     private void localizar(final int position, final View v){
@@ -126,8 +306,12 @@ public class FragmentAmigos extends Fragment{
 
         String url = null;
 
+        SharedPreferences preferences = getContext().getSharedPreferences("LoginActivityPreferences", getContext().MODE_PRIVATE);
+        String usuarioOrigem = preferences.getString("matricula","");
+
         try{
             url = AppUtil.getServer() + "usuario/getLocation?matricula="+ URLEncoder.encode(listaUsuarios.get(position).getMatricula(),"UTF-8");
+            url += "&usuarioOrigem=" + URLEncoder.encode(usuarioOrigem,"UTF-8");
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -242,6 +426,14 @@ public class FragmentAmigos extends Fragment{
 
                                     amigos.add(nome.trim());
                                     listaUsuarios.add(new Usuario(matricula, nome, email, "", data_nascimento, first_login,nivel_privacidade));
+                                }
+
+                                if (amigos.size() > 0){
+                                    txtResult.setText("");
+                                    layoutTexto.setVisibility(View.GONE);
+                                }else{
+                                    txtResult.setText("Você não possui nenhum amigo.");
+                                    layoutTexto.setVisibility(View.VISIBLE);
                                 }
 
                                 ArrayAdapter<String> amigosAdapter = new ArrayAdapter<String>(view.getContext(),
