@@ -532,9 +532,16 @@ public class Usuario {
 					
 					if (rsAps.first()){
 						PredictionRequest request = new PredictionRequest();
-						request.addAccessPoint(rsAps.getString("BSSID"), rsAps.getFloat("RSSI"));
+						//APResource ap = new APResource();
+						//ap.setBSSID(rsAps.getString("BSSID"));
+						//ap.setRSSI(rsAps.getFloat("RSSI"));
+						//request.addAccessPoint(ap.getBSSID(), ap.getRSSI());
+						request.addAccessPoint(rsAps.getString("BSSID").trim(), rsAps.getFloat("RSSI"));
 						while(rsAps.next()){
-							request.addAccessPoint(rsAps.getString("BSSID"), rsAps.getFloat("RSSI"));
+							//ap.setBSSID(rsAps.getString("BSSID"));
+							//ap.setRSSI(rsAps.getFloat("RSSI"));
+							//request.addAccessPoint(ap.getBSSID(), ap.getRSSI());
+							request.addAccessPoint(rsAps.getString("BSSID").trim(), rsAps.getFloat("RSSI"));
 						}
 						
 						PredictionService predServ = PredictionService.getInstance();

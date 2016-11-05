@@ -230,7 +230,6 @@ public class UsuarioResource {
 		JsonParser parser = new JsonParser();
 		JsonElement element = parser.parse(jsonApList);
 		JsonArray apListJson = element.getAsJsonArray();
-
 		RetornoRest ret = new RetornoRest();
 		PredictionRequest request = new PredictionRequest();
 		for(Object js : apListJson){
