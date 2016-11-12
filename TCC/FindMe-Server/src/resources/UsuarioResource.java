@@ -226,7 +226,7 @@ public class UsuarioResource {
 	@Path("/getMyLocation")
 	@Produces(MediaType.APPLICATION_JSON)
 	public RetornoRest getMyLocation(@QueryParam("apList") String jsonApList /*List<APResource> apList*/){
-
+		System.out.println(jsonApList);
 		JsonParser parser = new JsonParser();
 		JsonElement element = parser.parse(jsonApList);
 		JsonArray apListJson = element.getAsJsonArray();

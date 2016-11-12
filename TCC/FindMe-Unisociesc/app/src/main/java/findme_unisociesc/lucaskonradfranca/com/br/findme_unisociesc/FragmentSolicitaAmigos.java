@@ -185,6 +185,7 @@ public class FragmentSolicitaAmigos extends Fragment{
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
                         progress.dismiss();
+                        AppUtil.geraLog(error);
                         AppUtil.exibeMensagem((Activity) view.getContext(),getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
                     }
                 });
@@ -292,6 +293,8 @@ public class FragmentSolicitaAmigos extends Fragment{
 
                         if (! status){
                             AppUtil.exibeMensagem((Activity) view.getContext(),"Erro",msg,R.drawable.ic_alert);
+                            txtResult.setText("Não existem solicitações pendentes.");
+                            layoutTexto.setVisibility(View.VISIBLE);
                         }
 
                     }
@@ -300,7 +303,10 @@ public class FragmentSolicitaAmigos extends Fragment{
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
                         progress.dismiss();
+                        AppUtil.geraLog(error);
                         AppUtil.exibeMensagem((Activity) view.getContext(),getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
+                        txtResult.setText("Não existem solicitações pendentes.");
+                        layoutTexto.setVisibility(View.VISIBLE);
                     }
                 });
 

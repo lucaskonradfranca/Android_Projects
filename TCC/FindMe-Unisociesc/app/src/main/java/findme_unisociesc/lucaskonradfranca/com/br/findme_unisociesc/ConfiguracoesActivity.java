@@ -179,6 +179,7 @@ public class ConfiguracoesActivity extends Activity {
                                 progress.dismiss();
                                 AppUtil.exibeMensagem(ConfiguracoesActivity.this,"Erro","volleyerror"+error.getStackTrace(),R.drawable.ic_alert);
                                 error.printStackTrace();
+                                AppUtil.geraLog(error);
                             }
                         });
 

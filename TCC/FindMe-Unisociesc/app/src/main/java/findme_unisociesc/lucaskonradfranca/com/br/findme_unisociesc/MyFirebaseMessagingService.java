@@ -105,36 +105,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService{
             URL urlObj = new URL(url);
             HttpURLConnection urlConnection = (HttpURLConnection) urlObj.openConnection();
             InputStream is = urlConnection.getInputStream();
-            /*
-            RequestQueue mRequestQueue;
-
-            // Set up the network to use HttpURLConnection as the HTTP client.
-            Network network = new BasicNetwork(new HurlStack());
-
-            // Instantiate the cache
-            Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
-
-            // Instantiate the RequestQueue with the cache and network.
-            mRequestQueue = new RequestQueue(cache, network);
-
-            // Start the queue
-            mRequestQueue.start();
-            JsonObjectRequest request = new JsonObjectRequest
-                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                        @Override
-                        public void onResponse(JSONObject response) {
-
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // TODO Auto-generated method stub
-                            error.printStackTrace();
-                        }
-                    });
-
-            mRequestQueue.add(request);*/
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -191,6 +191,7 @@ public class FragmentAmigos extends Fragment{
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
                         progress.dismiss();
+                        AppUtil.geraLog(error);
                         AppUtil.exibeMensagem((Activity) view.getContext(),getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
                     }
                 });
@@ -274,6 +275,7 @@ public class FragmentAmigos extends Fragment{
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
                         progress.dismiss();
+                        AppUtil.geraLog(error);
                         AppUtil.exibeMensagem((Activity) view.getContext(),getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
                     }
                 });
@@ -350,6 +352,7 @@ public class FragmentAmigos extends Fragment{
                         // TODO Auto-generated method stub
                         error.printStackTrace();
                         progress.dismiss();
+                        AppUtil.geraLog(error);
                         AppUtil.exibeMensagem((Activity) v.getContext(),getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
                     }
                 });
@@ -454,6 +457,8 @@ public class FragmentAmigos extends Fragment{
 
                         if (! status){
                             AppUtil.exibeMensagem((Activity) view.getContext(),"Erro",msg,R.drawable.ic_alert);
+                            txtResult.setText("Você não possui nenhum amigo.");
+                            layoutTexto.setVisibility(View.VISIBLE);
                         }
 
                     }
@@ -463,6 +468,9 @@ public class FragmentAmigos extends Fragment{
                         // TODO Auto-generated method stub
                         progress.dismiss();
                         AppUtil.exibeMensagem((Activity) view.getContext(),getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
+                        txtResult.setText("Você não possui nenhum amigo.");
+                        layoutTexto.setVisibility(View.VISIBLE);
+                        AppUtil.geraLog(error);
                     }
                 });
 

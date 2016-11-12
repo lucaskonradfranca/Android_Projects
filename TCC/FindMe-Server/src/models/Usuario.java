@@ -485,6 +485,12 @@ public class Usuario {
 					this.msg_erro = "Usuário ainda não está disponível para localizar.";
 					return false;
 				}else{
+					
+					//Verifica as permissões de localização do usuário.
+					if (! this.checkPermission(usuarioOrigem,this.matricula)){
+						return false;
+					}
+					
 					//Exclui as informações dos APS disponíveis desse usuário, e tenta recuperar as informações atualizadas.
 					query = "DELETE FROM usuario_aps WHERE matricula = '" + this.matricula + "' AND usuario_origem = '"+usuarioOrigem+"' ; ";
 					result = ConexaoBD.execute(con,query);
@@ -532,15 +538,8 @@ public class Usuario {
 					
 					if (rsAps.first()){
 						PredictionRequest request = new PredictionRequest();
-						//APResource ap = new APResource();
-						//ap.setBSSID(rsAps.getString("BSSID"));
-						//ap.setRSSI(rsAps.getFloat("RSSI"));
-						//request.addAccessPoint(ap.getBSSID(), ap.getRSSI());
 						request.addAccessPoint(rsAps.getString("BSSID").trim(), rsAps.getFloat("RSSI"));
 						while(rsAps.next()){
-							//ap.setBSSID(rsAps.getString("BSSID"));
-							//ap.setRSSI(rsAps.getFloat("RSSI"));
-							//request.addAccessPoint(ap.getBSSID(), ap.getRSSI());
 							request.addAccessPoint(rsAps.getString("BSSID").trim(), rsAps.getFloat("RSSI"));
 						}
 						
@@ -712,6 +711,58 @@ public class Usuario {
 		}
 		
 		return status;
+	}
+
+	private boolean checkPermission(String userOrigem, String userDestino){
+		
+		String query = "";
+		
+		query = "SELECT * FROM amigos_bloqueados WHERE matricula_amigo = '" + userOrigem + "' AND matricula = '" + userDestino + "';";
+		Connection con = ConexaoBD.getConexaoSQL();
+		ResultSet rs = ConexaoBD.consultar(con, query);
+		try{
+			if (rs.first()){
+				this.setMsg_erro("Você está bloqueado por esse usuário.");
+				return false;
+			}else{
+				query = "SELECT * FROM amigos_bloqueados WHERE matricula_amigo = '" + userDestino + "' AND matricula = '" + userOrigem + "';";
+				rs = ConexaoBD.consultar(con, query);
+				if (rs.first()){
+					this.setMsg_erro("Você bloqueou esse usuário. Para localizá-lo, é necessário desbloqueá-lo.");
+					return false;
+				}else{
+					query = " SELECT * FROM usuario WHERE matricula = '" + userDestino + "'; ";
+					rs = ConexaoBD.consultar(con, query);
+					if (rs.first()){
+						int nivelPrivacidade = rs.getInt("nivel_privacidade");
+						System.out.println(nivelPrivacidade);
+						System.out.println(userDestino);
+						if (nivelPrivacidade == 0){ //todos
+							return true;
+						}else{
+							if (nivelPrivacidade == 3){ // ninguém
+								this.setMsg_erro("Não é possível localizar esse usuário no momento. Usuário não está compartilhando a sua localização.");
+								return false;
+							}else{
+								if (nivelPrivacidade == 1){ //somente amigos
+									query = "SELECT * FROM amigos WHERE matricula = '" + userDestino + "' AND matricula_amigo = '" + userOrigem + "';";
+									rs = ConexaoBD.consultar(con, query);
+									if (rs.first()){
+										return true;
+									}else{
+										this.setMsg_erro("Você não é amigo desse usuário. Compartilhamento de localização desse usuário está habilitado apenas para seus amigos.");
+										return false;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return true;
 	}
 	
 	//-----------------------------------

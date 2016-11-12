@@ -252,6 +252,7 @@ public class FragmentHome extends Fragment {
                         // TODO Auto-generated method stub
                         progress.dismiss();
                         error.printStackTrace();
+                        AppUtil.geraLog(error);
                         AppUtil.exibeMensagem((Activity) myView.getContext(),getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
                     }
                 });

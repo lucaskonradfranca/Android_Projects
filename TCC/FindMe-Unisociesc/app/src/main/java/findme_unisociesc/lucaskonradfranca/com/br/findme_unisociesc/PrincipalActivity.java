@@ -1,9 +1,11 @@
 package findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -74,6 +76,23 @@ public class PrincipalActivity extends FragmentActivity {
                 FragmentSolicitaAmigos.class, null);
 
         TabWidget tabWidget = mTabHost.getTabWidget();
+
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+        }
+        super.onResume();
     }
 
     @Override
@@ -139,6 +158,7 @@ public class PrincipalActivity extends FragmentActivity {
                                     public void onErrorResponse(VolleyError error) {
                                         // TODO Auto-generated method stub
                                         error.printStackTrace();
+                                        AppUtil.geraLog(error);
                                     }
                                 });
 
@@ -161,5 +181,19 @@ public class PrincipalActivity extends FragmentActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Para o correto funcionamento do aplicativo, é necessário ativar a Localização do dispositivo. Clique em OK para acessar as configurações e ativar a localização.")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
 }

@@ -5,9 +5,11 @@ import models.LocationData;
 import models.PredictionRequest;
 import models.Room;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -93,65 +95,81 @@ public class PredictionService {
     public String generateTrainData(){
         try{
             StringBuilder sb = new StringBuilder();
-            List<AccessPoint> aps = LocationService.getInstance().getAccessPoints();
-            sb.append("@RELATION wifi\n");
-            sb.append("\n");
-            for(AccessPoint ap : aps){
-                sb.append("@ATTRIBUTE ap" + ap.getId() + " REAL\n");
-            }
-            List<Room> rooms = RoomService.getInstance().getAll();
-            sb.append("@ATTRIBUTE class {");
-            for(int i=0;i<rooms.size();i++){
-                Room room = rooms.get(i);
-                sb.append(room.getId());
-                if(i != rooms.size()-1)
-                    sb.append(",");
-            }
-            sb.append(",none");
-            sb.append("}\n");
-            sb.append("\n");
-            sb.append("@DATA\n");
-            List<LocationData> locData = LocationService.getInstance().getAllLocationData();
-
-            HashMap<String, HashMap<Long, Float>> data = new HashMap<String, HashMap<Long,Float>>();
-            
-            for(LocationData loc : locData){
-                String uuid = loc.getUuid();
+            File arff = new File("C:/wifi_data/export.arff");
+            if (arff.isFile()){
+            	BufferedReader reader = new BufferedReader(new FileReader ("C:/wifi_data/export.arff"));
+            	String line = "";
+            	while((line = reader.readLine()) != null) {
+                    sb.append(line);
+                    sb.append("\n");
+                }
+            	reader.close();
+            }else{
+            	List<AccessPoint> aps = LocationService.getInstance().getAccessPoints();
+                sb.append("@RELATION wifi\n");
+                sb.append("\n");
                 for(AccessPoint ap : aps){
-                    if(loc.getAccessPoint().getId().equals(ap.getId())){
-                        if(!data.containsKey(uuid)){
-                            data.put(uuid, new HashMap<Long, Float>());    
-                        }
-                        data.get(uuid).put(ap.getId(), loc.getSignalIntesity());
-                    }
-                    
+                    sb.append("@ATTRIBUTE ap" + ap.getId() + " REAL\n");
                 }
-            }
-            
-            
-            for(String key : data.keySet()){
-                for(int c=0;c<aps.size();c++){
-                    AccessPoint ap = aps.get(c);
-                    Map<Long, Float> coletaData = data.get(key);
-                    if(coletaData.containsKey(ap.getId())){
-                        sb.append(coletaData.get(ap.getId()));
-                    }else{
-                        sb.append("0");
-                    }
-                    if(c!=aps.size()-1){
+                List<Room> rooms = RoomService.getInstance().getAll();
+                sb.append("@ATTRIBUTE class {");
+                for(int i=0;i<rooms.size();i++){
+                    Room room = rooms.get(i);
+                    sb.append(room.getId());
+                    if(i != rooms.size()-1)
                         sb.append(",");
-                    }else{
-                        String category = LocationService.getInstance().getLocationDataByUUID(key).getRoom().getId().toString();
-                        sb.append("," + category);
-                        sb.append("\n");
+                }
+                sb.append(",none");
+                sb.append("}\n");
+                sb.append("\n");
+                sb.append("@DATA\n");
+                List<LocationData> locData = LocationService.getInstance().getAllLocationData();
+
+                HashMap<String, HashMap<Long, Float>> data = new HashMap<String, HashMap<Long,Float>>();
+                
+                for(LocationData loc : locData){
+                    String uuid = loc.getUuid();
+                    System.out.println("locData: " + loc.getUuid());
+                    for(AccessPoint ap : aps){
+                        if(loc.getAccessPoint().getId().equals(ap.getId())){
+                            if(!data.containsKey(uuid)){
+                                data.put(uuid, new HashMap<Long, Float>());    
+                            }
+                            data.get(uuid).put(ap.getId(), loc.getSignalIntesity());
+                        }
+                        
                     }
                 }
+                
+                System.out.println("Acabou for LocationData");
+                
+                for(String key : data.keySet()){
+                	for(int c=0;c<aps.size();c++){
+                        AccessPoint ap = aps.get(c);
+                        Map<Long, Float> coletaData = data.get(key);
+                        if(coletaData.containsKey(ap.getId())){
+                            sb.append(coletaData.get(ap.getId()));
+                        }else{
+                            sb.append("0");
+                        }
+                        if(c!=aps.size()-1){
+                            sb.append(",");
+                        }else{
+                            String category = LocationService.getInstance().getLocationDataByUUID(key).getRoom().getId().toString();
+                            sb.append("," + category);
+                            sb.append("\n");
+                        }
+                    }
+                }
+                File file = new File("C:/wifi_data/export.arff");
+                BufferedWriter writer = null;
+                writer = new BufferedWriter(new FileWriter(file));
+                writer.write(sb.toString());
+                writer.close();
             }
-            File file = new File("C:/wifi_data/export.arff");
-            BufferedWriter writer = null;
-            writer = new BufferedWriter(new FileWriter(file));
-            writer.write(sb.toString());
-            writer.close();
+            
+            System.out.println("Acabou for data.keySet");
+            
             
             return sb.toString();
             
@@ -209,4 +227,7 @@ public class PredictionService {
         }
         return null;
     }
+    
+    
+    
 }

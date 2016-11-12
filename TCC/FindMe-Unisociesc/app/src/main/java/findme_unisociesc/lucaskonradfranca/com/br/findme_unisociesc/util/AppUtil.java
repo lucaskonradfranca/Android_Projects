@@ -4,16 +4,25 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Environment;
 import android.widget.ProgressBar;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 
 
 /**
  * Created by Lucas on 08/10/2016.
  */
-public class AppUtil {
+public class
+AppUtil {
 
     //private static String SERVER = "http://192.168.137.1:8080/FindMe-Server/";
-    private static String SERVER = "http://192.168.0.11:8080/FindMe-Server/";
+    //private static String SERVER = "http://192.168.0.11:8080/FindMe-Server/";
+    private static String SERVER = "http://192.168.1.3:8080/FindMe-Server/";
+    //private static String SERVER = "http://10.8.143.217:8080/FindMe-Server/";
     public static String getServer() {
         return SERVER;
     }
@@ -37,6 +46,26 @@ public class AppUtil {
         progress.setIndeterminate(true);
 
         return progress;
+    }
+
+    public static void geraLog(Exception exception){
+        String filename = "findme_log.txt";
+        String root = Environment.getExternalStorageDirectory().toString();
+        String filePath = root + "/";
+
+        File file = new File(filePath, filename);
+
+        FileOutputStream stream;
+        PrintWriter writer;
+        try {
+            stream = new FileOutputStream(file, true);
+            writer = new PrintWriter(stream);
+            //writer.println(mensagem);
+            exception.printStackTrace(writer);
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -288,6 +288,7 @@ public class ConfigUserActivity extends Activity {
                                 public void onErrorResponse(VolleyError error) {
                                     // TODO Auto-generated method stub
                                     progress.dismiss();
+                                    AppUtil.geraLog(error);
                                     AppUtil.exibeMensagem(ConfigUserActivity.this,"Erro","volleyerror"+error.getStackTrace(),R.drawable.ic_alert);
                                     error.printStackTrace();
                                 }

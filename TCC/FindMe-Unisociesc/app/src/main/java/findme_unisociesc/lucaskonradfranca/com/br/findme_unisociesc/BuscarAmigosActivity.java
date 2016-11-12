@@ -178,6 +178,7 @@ public class BuscarAmigosActivity extends Activity {
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
                         progress.dismiss();
+                        AppUtil.geraLog(error);
                         AppUtil.exibeMensagem(BuscarAmigosActivity.this,getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
                     }
                 });
@@ -249,6 +250,7 @@ public class BuscarAmigosActivity extends Activity {
                         // TODO Auto-generated method stub
                         error.printStackTrace();
                         progress.dismiss();
+                        AppUtil.geraLog(error);
                         AppUtil.exibeMensagem(BuscarAmigosActivity.this,getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
                     }
                 });
@@ -320,6 +322,7 @@ public class BuscarAmigosActivity extends Activity {
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
                         progress.dismiss();
+                        AppUtil.geraLog(error);
                         AppUtil.exibeMensagem(BuscarAmigosActivity.this,getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
                     }
                 });
@@ -429,6 +432,7 @@ public class BuscarAmigosActivity extends Activity {
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
                         progress.dismiss();
+                        AppUtil.geraLog(error);
                         AppUtil.exibeMensagem(BuscarAmigosActivity.this,getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
                     }
                 });

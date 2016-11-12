@@ -323,6 +323,35 @@ public class LoginActivity extends Activity {
                         // TODO Auto-generated method stub
                         progress.dismiss();
                         error.printStackTrace();
+
+                        AppUtil.geraLog(error);
+
+                        /*String matricula       = "113001625";
+                        String nome            = "Lucas";
+                        String email           = "lucas@email.com";
+                        String data_nascimento = "29091992";
+                        String first_login     = "N";
+                        int nivel_privacidade = 0;
+
+                        Usuario usuario = new Usuario();
+
+                        usuario.setMatricula(matricula);
+                        usuario.setData_nascimento(data_nascimento);
+                        usuario.setEmail(email);
+                        usuario.setFirst_login("N");
+                        usuario.setNome(nome);
+                        usuario.setSenha(senha);
+                        usuario.setNivel_privacidade(nivel_privacidade);
+                        Gson gson = new Gson();
+                        String json = gson.toJson(usuario);
+                        SharedPreferences sharedPreferences = getSharedPreferences("LoginActivityPreferences", MODE_PRIVATE);
+                        SharedPreferences.Editor editor     = sharedPreferences.edit();
+                        editor.putString("objUsuario",json);
+                        editor.commit();
+
+                        //realiza o login.
+                        ChamarActivityPrincipal(usuario);*/
+
                         AppUtil.exibeMensagem(LoginActivity.this,getString(R.string.erro),getString(R.string.erro_conexao),R.drawable.ic_alert);
                     }
                 });
@@ -397,6 +426,7 @@ public class LoginActivity extends Activity {
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
                         error.printStackTrace();
+                        AppUtil.geraLog(error);
                     }
                 });
 
