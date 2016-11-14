@@ -6,8 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.util.AppUtil;
 
 public class LocationActivity extends Activity {
     private TextView textoLocal;
@@ -30,6 +33,11 @@ public class LocationActivity extends Activity {
         webView.getSettings().setSupportZoom(true);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
+        webView.setWebViewClient(new WebViewClient() {
+            public void onPageFinished(WebView view, String url) {
+                AppUtil.posicionaWebView(view, url);
+            }
+        });
         webView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
 
         Intent intent = getIntent();

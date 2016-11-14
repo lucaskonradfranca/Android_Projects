@@ -32,10 +32,16 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+import java.util.List;
 
 import findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.Model.Usuario;
 import findme_unisociesc.lucaskonradfranca.com.br.findme_unisociesc.util.AppUtil;
@@ -118,6 +124,21 @@ public class LoginActivity extends Activity {
 
     private void verificaPermissoes() {
 
+
+        Dexter.initialize(this);
+
+        Dexter.checkPermissionsOnSameThread(new MultiplePermissionsListener() {
+            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {/* ... */}
+            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {/* ... */}
+        }, Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.CHANGE_WIFI_STATE,
+                Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        /*
         int permissionCheck = ContextCompat.checkSelfPermission(
                 this, Manifest.permission.INTERNET);
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
@@ -158,7 +179,7 @@ public class LoginActivity extends Activity {
                 this, Manifest.permission.ACCESS_COARSE_LOCATION);
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION, ACCESS_COARSE_LOCATION);
-        }
+        }*/
 
     }
 

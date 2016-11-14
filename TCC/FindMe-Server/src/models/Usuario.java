@@ -367,14 +367,19 @@ public class Usuario {
 	public boolean updateToken(String token){
 		boolean retorno = true;
 		String query = "";
-		if (this.matricula.isEmpty() || token.isEmpty()){
+		if (this.matricula.isEmpty()){
 			retorno = false;
 		}else{
 			Connection con = ConexaoBD.getConexaoSQL();
 			ResultSet rs = ConexaoBD.consultar(con, "SELECT * FROM usuario_token WHERE matricula = '"+this.matricula+"'; ");
 			try{
 				if (rs.first()){
-					query = "UPDATE usuario_token SET token = '" + token + "' WHERE matricula = '" + this.matricula + "'; ";
+					if (token.isEmpty()){
+						query = "DELETE FROM usuario_token WHERE matricula = '" + this.matricula + "'; ";
+					}else{
+						query = "UPDATE usuario_token SET token = '" + token + "' WHERE matricula = '" + this.matricula + "'; ";
+					}
+						
 				}else{
 					query = "INSERT INTO usuario_token (matricula, token) VALUES ('" + this.matricula + "', '" + token + "'); ";
 				}

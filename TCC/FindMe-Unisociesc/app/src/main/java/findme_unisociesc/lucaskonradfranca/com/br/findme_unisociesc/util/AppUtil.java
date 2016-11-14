@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Environment;
+import android.os.Handler;
+import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import java.io.File;
@@ -68,4 +70,46 @@ AppUtil {
         }
     }
 
+    public static void posicionaWebView(final WebView view, final String url) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int x = getPosX(url);
+                view.scrollTo(x,0);
+            }
+        }, 300);
+    }
+
+    private static int getPosX(String url) {
+        String sala = url.substring(url.length()-4);
+        int x = 0;
+        if (sala.equals("B001")){
+            x = 1600;
+        }else if (sala.equals("B002")){
+            x = 1600;
+        }else if (sala.equals("B003")){
+            x = 1300;
+        }else if (sala.equals("B004")){
+            x = 1100;
+        }else if (sala.equals("B005")){
+            x = 1100;
+        }else if (sala.equals("B006")){
+            x = 850;
+        }else if (sala.equals("B007")){
+            x = 850;
+        }else if (sala.equals("B008")){
+            x = 600;
+        }else if (sala.equals("B009")){
+            x = 600;
+        }else if (sala.equals("B010")){
+            x = 350;
+        }else if (sala.equals("B011")){
+            x = 350;
+        }else if (sala.equals("B012")){
+            x = 0;
+        }else if (sala.equals("B013")){
+            x = 0;
+        }
+        return x;
+    }
 }

@@ -226,8 +226,5 @@ public class PredictionService {
            Logger.getLogger(PredictionService.class.getName()).log(Level.SEVERE, null, ex); 
         }
         return null;
-    }
-    
-    
-    
+    }    
 }
