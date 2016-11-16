@@ -20,9 +20,11 @@ public class ConexaoBD {
 	    try { 
 	        // Carrega o driver JDBC 
 	        driverName = "com.microsoft.sqlserver.jdbc.SQLServerDriver"; //  JDBC driver
-	        url = "jdbc:sqlserver://Lucas\\SQLEXPRESS;databaseName=findme;";
+	        //url = "jdbc:sqlserver://Lucas\\SQLEXPRESS;databaseName=findme;";
+	        url = "jdbc:sqlserver://FindMe;databaseName=findme;";
 	        username = "findme";
-	        password = "findme";
+	        //password = "findme";
+	        password = "lucas.franca@123";
 	        
 	        Class.forName(driverName); // Create a conexao  com Banco de dados 
 	        

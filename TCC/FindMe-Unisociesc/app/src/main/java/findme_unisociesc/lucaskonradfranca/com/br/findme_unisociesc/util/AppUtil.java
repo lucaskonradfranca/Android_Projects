@@ -23,8 +23,10 @@ AppUtil {
 
     //private static String SERVER = "http://192.168.137.1:8080/FindMe-Server/";
     //private static String SERVER = "http://192.168.0.11:8080/FindMe-Server/";
-    private static String SERVER = "http://192.168.1.3:8080/FindMe-Server/";
+    //private static String SERVER = "http://192.168.1.3:8080/FindMe-Server/";
     //private static String SERVER = "http://10.8.143.217:8080/FindMe-Server/";
+    private static String SERVER = "http://23.101.131.212:8080/FindMe-Server/"; // server azure
+
     public static String getServer() {
         return SERVER;
     }
